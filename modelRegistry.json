@@ -1,0 +1,111 @@
+{
+    "deepseek-r1": {
+        "strengths": [
+            "deep_reasoning",
+            "complex_logic",
+            "concurrency_analysis",
+            "breaking_change_detection",
+            "dependency_analysis"
+        ],
+        "providers": {
+            "openrouter": "deepseek/deepseek-r1",
+            "together": "deepseek-ai/DeepSeek-R1",
+            "groq": "deepseek-r1-distill-llama-70b"
+        }
+    },
+    "deepseek-v3": {
+        "strengths": [
+            "security_detection",
+            "architecture_analysis",
+            "performance_analysis",
+            "api_analysis",
+            "error_analysis",
+            "breaking_change_detection"
+        ],
+        "providers": {
+            "openrouter": "deepseek/deepseek-v3",
+            "together": "deepseek-ai/DeepSeek-V3",
+            "fireworks": "accounts/fireworks/models/deepseek-v3"
+        }
+    },
+    "qwen-2.5-coder-32b": {
+        "strengths": [
+            "linting",
+            "complexity_analysis",
+            "dead_code_detection",
+            "test_analysis",
+            "structured_output"
+        ],
+        "providers": {
+            "groq": "qwen-2.5-coder-32b",
+            "openrouter": "qwen/qwen-2.5-coder-32b-instruct",
+            "together": "Qwen/Qwen2.5-Coder-32B-Instruct",
+            "fireworks": "qwen-coder-2.5-32b"
+        }
+    },
+    "claude-3.5-sonnet": {
+        "strengths": [
+            "architecture_analysis",
+            "security_detection",
+            "api_analysis",
+            "concurrency_analysis",
+            "breaking_change_detection",
+            "dependency_analysis"
+        ],
+        "providers": {
+            "anthropic": "claude-3-5-sonnet-latest",
+            "openrouter": "anthropic/claude-3.5-sonnet"
+        }
+    },
+    "gpt-4o": {
+        "strengths": [
+            "security_detection",
+            "architecture_analysis",
+            "performance_analysis",
+            "error_analysis",
+            "api_analysis",
+            "test_analysis"
+        ],
+        "providers": {
+            "openai": "gpt-4o",
+            "openrouter": "openai/gpt-4o"
+        }
+    },
+    "gpt-4o-mini": {
+        "strengths": [
+            "linting",
+            "dead_code_detection",
+            "complexity_analysis",
+            "fast_detection"
+        ],
+        "providers": {
+            "openai": "gpt-4o-mini",
+            "openrouter": "openai/gpt-4o-mini"
+        }
+    },
+    "gemini-1.5-flash": {
+        "strengths": [
+            "linting",
+            "dead_code_detection",
+            "complexity_analysis",
+            "fast_detection"
+        ],
+        "providers": {
+            "google": "gemini-1.5-flash",
+            "openrouter": "google/gemini-flash-1.5"
+        }
+    },
+    "llama-3.3-70b": {
+        "strengths": [
+            "error_analysis",
+            "performance_analysis",
+            "test_analysis",
+            "structured_output"
+        ],
+        "providers": {
+            "groq": "llama-3.3-70b-versatile",
+            "openrouter": "meta-llama/llama-3.3-70b-instruct",
+            "together": "meta-llama/Llama-3.3-70B-Instruct-Turbo"
+        }
+    }
+}
