@@ -11,7 +11,6 @@
 
 <p align="center">
   <a href="#quick-start">Quick Start</a> •
-  <a href="#how-it-works">How It Works</a> •
   <a href="#roles">Roles</a> •
   <a href="#configuration">Configuration</a> •
   <a href="#architecture">Architecture</a>
@@ -21,7 +20,7 @@
 
 ## ⚡ What Is This?
 
-An MCP server that splits code review across parallel specialist agents — each analyzing from a different angle, using the best model for the job.
+Built specifically for [Antigravity](https://github.com/google/anthropic-antigravity) — because AI coding assistants can't do parallel subagent orchestration within a single conversation. MCP Hive solves this by offloading multi-agent code analysis to an external MCP server that runs specialist agents in parallel and merges the results.
 
 ```
 You (1 request) → Hive → 5 bees in parallel → merged findings
@@ -33,6 +32,8 @@ You (1 request) → Hive → 5 bees in parallel → merged findings
 ```
 
 > Sequential: **18s** → Hive: **6s** → **~3x faster**
+
+Works with any MCP-compatible client.
 
 ---
 
@@ -63,21 +64,7 @@ Add to your MCP client configuration:
 }
 ```
 
----
 
-## 🧠 How It Works
-
-```
-Role → Strength → Model Registry → Provider → Best Candidate
-```
-
-1. 📋 **Decompose** — map files to specialist roles
-2. 📄 **Context** — inject file contents into prompts
-3. 🚀 **Dispatch** — launch agents in parallel (bounded concurrency)
-4. 🤖 **Infer** — each bee calls its assigned model
-5. 🍯 **Aggregate** — merge all findings into one response
-
-If a model fails → **retry → switch provider → escalate model → hard timeout (45s)**
 
 ---
 
