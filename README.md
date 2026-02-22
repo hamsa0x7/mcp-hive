@@ -14,7 +14,7 @@
   <a href="#how-it-works">How It Works</a> •
   <a href="#roles">Roles</a> •
   <a href="#configuration">Configuration</a> •
-  <a href="#api">API</a>
+  <a href="#architecture">Architecture</a>
 </p>
 
 ---
@@ -39,7 +39,7 @@ You (1 request) → Hive → 5 bees in parallel → merged findings
 ## 🚀 Quick Start
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/mcp-hive.git
+git clone https://github.com/hamsa0x7/mcp-hive.git
 cd mcp-hive
 npm install
 cp .env.example .env   # add your API keys
@@ -47,7 +47,9 @@ npm run build
 npm test               # 85 tests ✅
 ```
 
-### MCP Config
+### 🔌 MCP Config
+
+Add to your MCP client configuration:
 
 ```json
 {
@@ -112,52 +114,6 @@ All config in `.env` — see [`.env.example`](.env.example):
 | `HIVE_REPORT_STYLE` | `clinical` | 🎨 Theme: `clinical` / `hive` |
 
 **Supported providers:** OpenAI · Anthropic · Google · Groq · OpenRouter · Together · Mistral · Fireworks
-
----
-
-## 📡 API
-
-### `spawn_parallel_agents`
-
-```json
-{
-  "role": "security_specialist",
-  "diff_chunks": [
-    { "path": "src/auth.ts" },
-    { "path": "src/middleware.ts" }
-  ]
-}
-```
-
-### Response
-
-```json
-{
-  "batch_id": "sw_abc123",
-  "results": [
-    {
-      "role": "security_specialist",
-      "status": "success",
-      "provider": "anthropic",
-      "model": "claude-3.5-sonnet",
-      "findings": ["..."],
-      "overall_confidence": 0.87,
-      "latency_ms": 4200
-    }
-  ],
-  "metrics": {
-    "acceleration_report": {
-      "theme": "hive",
-      "agents": 5,
-      "sequential_ms": 18000,
-      "parallel_ms": 6100,
-      "speedup": 2.95,
-      "time_saved_ms": 11900,
-      "parallel_efficiency": 0.91
-    }
-  }
-}
-```
 
 ---
 
