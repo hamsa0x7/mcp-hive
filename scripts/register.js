@@ -4,14 +4,13 @@ import os from 'os';
 
 const configPath = path.join(os.homedir(), '.gemini', 'antigravity', 'mcp_config.json');
 const currentDir = process.cwd();
-const entryPoint = path.join(currentDir, 'dist', 'index.js');
+const entryPoint = 'dist/index.js'; // Use relative entry point
 
 console.log('🐝 Registering MCP Hive...');
 
 try {
     if (!fs.existsSync(configPath)) {
         console.error(`❌ Antigravity config not found at: ${configPath}`);
-        console.log('Please ensure Antigravity is installed and you have run it at least once.');
         process.exit(1);
     }
 
@@ -21,7 +20,9 @@ try {
         config.mcpServers = {};
     }
 
-    // Add or update hive configuration
+    // Register with relative entry point and absolute CWD
+    // This allows the command to be 'node dist/index.js' 
+    // run from the project root.
     config.mcpServers.hive = {
         command: 'node',
         args: [entryPoint],
@@ -33,10 +34,10 @@ try {
 
     fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
 
-    console.log('✅ Success! MCP Hive is now registered in your Antigravity config.');
-    console.log(`📂 Location: ${currentDir}`);
-    console.log('💡 Restart Antigravity to apply changes.');
+    console.log('✅ Success! MCP Hive is registered.');
+    console.log(`📂 Working Directory: ${currentDir}`);
+    console.log('💡 Restart Antigravity to apply.');
 } catch (error) {
-    console.error('❌ Error during registration:', error.message);
+    console.error('❌ Error:', error.message);
     process.exit(1);
 }
