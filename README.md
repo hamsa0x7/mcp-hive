@@ -43,7 +43,7 @@ Compatible with any MCP client.
 git clone https://github.com/hamsa0x7/mcp-hive.git
 cd mcp-hive
 npm install
-cp .env.example .env   # add your API keys
+# Open .env and add your API keys
 npm run build
 npm run register       # auto-configure Antigravity 🐝
 npm test               # 85 tests ✅
@@ -86,7 +86,7 @@ npm test               # 85 tests ✅
 
 ## 🔧 Configuration
 
-All config in `.env` — see [`.env.example`](.env.example):
+All config in `.env`:
 
 | Variable | Default | Description |
 |---|---|---|
