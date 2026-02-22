@@ -23,7 +23,7 @@ export function createMcpServer() {
 export function setupHandlers(server: McpServer) {
     server.tool(
         'hive_swarm',
-        'Spawn a swarm of parallel AI subagents to analyze code simultaneously. Allows heterogeneous roles (e.g., security_specialist, discovery_agent) or custom prompts in a single batch.',
+        'Spawn a swarm of parallel AI subagents to execute arbitrary tasks simultaneously. Allows heterogeneous roles (e.g., discovery_agent, tactical_planner) or custom prompts in a single batch.',
         {
             tasks: z.array(z.object({
                 path: z.string().describe('Absolute or relative path to the file'),
