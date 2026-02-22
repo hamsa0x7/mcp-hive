@@ -5,8 +5,8 @@
 <h1 align="center">🐝 MCP Hive</h1>
 
 <p align="center">
-  <strong>Parallel code analysis through specialized AI agents.</strong><br/>
-  One request. Multiple perspectives. Merged intelligence.
+  <strong>Parallel subagent orchestration via MCP.</strong><br/>
+  One request. Multiple specialists. Merged intelligence.
 </p>
 
 <p align="center">
@@ -18,22 +18,22 @@
 
 ---
 
-## ⚡ What Is This?
+## ⚡ Why?
 
-Built specifically for [Antigravity](https://github.com/google/anthropic-antigravity) — because AI coding assistants can't do parallel subagent orchestration within a single conversation. MCP Hive solves this by offloading multi-agent code analysis to an external MCP server that runs specialist agents in parallel and merges the results.
+Antigravity doesn't have a native `Task()` tool for spawning parallel, headless subagents within a conversation. MCP Hive fills that gap — it's an external MCP server that handles multi-agent code analysis in parallel and returns merged results.
 
 ```
-You (1 request) → Hive → 5 bees in parallel → merged findings
-                         ├─ 🔒 Security
-                         ├─ 🏗️ Architecture
-                         ├─ ⚡ Performance
-                         ├─ 🧹 Linting
-                         └─ 🔗 API Contracts
+1 request → Hive → 5 bees in parallel → merged findings
+                   ├─ 🔒 Security
+                   ├─ 🏗️ Architecture
+                   ├─ ⚡ Performance
+                   ├─ 🧹 Linting
+                   └─ 🔗 API Contracts
 ```
 
 > Sequential: **18s** → Hive: **6s** → **~3x faster**
 
-Works with any MCP-compatible client.
+Compatible with any MCP client.
 
 ---
 
@@ -50,8 +50,6 @@ npm test               # 85 tests ✅
 
 ### 🔌 MCP Config
 
-Add to your MCP client configuration:
-
 ```json
 {
   "mcpServers": {
@@ -63,8 +61,6 @@ Add to your MCP client configuration:
   }
 }
 ```
-
-
 
 ---
 
