@@ -1,7 +1,7 @@
 {
   "name": "mcp-hive",
   "version": "1.0.0",
-  "description": "🐝 Parallel code analysis through specialized AI agents",
+  "description": "🐝 The Swarm Orchestration Layer for Agentic Environments. One request. Multiple specialists. Merged intelligence.",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
