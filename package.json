@@ -6,7 +6,8 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "test": "vitest run"
+    "test": "vitest run",
+    "register": "node scripts/register.js"
   },
   "dependencies": {
     "@babel/parser": "^7.29.0",

@@ -45,6 +45,7 @@ cd mcp-hive
 npm install
 cp .env.example .env   # add your API keys
 npm run build
+npm run register       # auto-configure Antigravity 🐝
 npm test               # 85 tests ✅
 ```
 
