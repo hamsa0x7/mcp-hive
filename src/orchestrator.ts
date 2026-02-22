@@ -1,4 +1,4 @@
-import { expandRoles } from './routing.js';
+import { expandSwarm } from './routing.js';
 import { checkBatchBudget } from './budget.js';
 import { runConcurrent } from './concurrency.js';
 import { executeAgent } from './execute_agent.js';
@@ -26,7 +26,8 @@ const DEFAULT_BATCH_TOKEN_LIMIT = 100000;
 export async function orchestrate(
     diffChunks: { path: string }[],
     role: string,
-    batchId: string = Date.now().toString()
+    batchId: string = Date.now().toString(),
+    customPrompt?: string
 ): Promise<BatchResponse> {
     const ts = createTimestamps();
 
@@ -39,8 +40,12 @@ export async function orchestrate(
     }
 
     // 2. Expand roles into tasks (decomposition)
-    const files = diffChunks.map(chunk => chunk.path);
-    const tasks = expandRoles(files, role);
+    const taskInput = diffChunks.map(chunk => ({
+        path: chunk.path,
+        role,
+        customPrompt
+    }));
+    const tasks = expandSwarm(taskInput);
 
     // 3. Check batch token budget
     const budgetCheck = checkBatchBudget(tasks, DEFAULT_BATCH_TOKEN_LIMIT);
@@ -74,6 +79,74 @@ export async function orchestrate(
     ts.after_dispatch = Date.now();
 
     // 6. Run concurrent execution (limit: 5) — inference phase
+    const results = await runConcurrent(concurrentTasks, 5) as AgentResult[];
+
+    ts.after_inference = Date.now();
+
+    // 7. Aggregate into BatchResponse
+    const batch = aggregateBatch(results);
+
+    ts.after_aggregation = Date.now();
+
+    // 8. Compute and attach swarm metrics
+    batch.metrics = computeSwarmMetrics(batchId, ts, results);
+
+    return batch;
+}
+
+/**
+ * Orchestrates a swarm where each file can have a different assigned role.
+ *
+ * @param swarmTasks - Array of objects with file path and role
+ * @param batchId - Optional batch identifier
+ * @returns Structured BatchResponse
+ */
+export async function orchestrateSwarm(
+    swarmTasks: { path: string, role?: string, customPrompt?: string }[],
+    batchId: string = Date.now().toString()
+): Promise<BatchResponse> {
+    const ts = createTimestamps();
+    validateAndConfigure();
+
+    if (swarmTasks.length > MAX_AGENTS_PER_BATCH) {
+        throw new Error(`Swarm size ${swarmTasks.length} exceeds maximum limit of ${MAX_AGENTS_PER_BATCH}`);
+    }
+
+    // 2. Expand tasks directly
+    const tasks = expandSwarm(swarmTasks);
+
+    // 3. Check batch token budget
+    const budgetCheck = checkBatchBudget(tasks, DEFAULT_BATCH_TOKEN_LIMIT);
+    if (!budgetCheck.allowed) {
+        throw new Error(budgetCheck.reason || 'Token budget exceeded');
+    }
+
+    ts.after_decomposition = Date.now();
+
+    // 4. Resolve context for all tasks
+    const contextMap = new Map<string, string>();
+    for (const task of tasks) {
+        const ctx = await resolveContext(task.filePath);
+        if (ctx) contextMap.set(task.filePath, ctx);
+    }
+
+    ts.after_context_boost = Date.now();
+
+    // 5. Build concurrent task wrappers
+    const concurrentTasks = tasks.map(task => {
+        return async (): Promise<AgentResult> => {
+            const context = contextMap.get(task.filePath);
+            const userPrompt = context
+                ? `${context}\n\nAnalyze file: ${task.filePath}`
+                : `Analyze file: ${task.filePath}`;
+
+            return executeAgent(task.role, batchId, task.prompt, userPrompt);
+        };
+    });
+
+    ts.after_dispatch = Date.now();
+
+    // 6. Run concurrent execution
     const results = await runConcurrent(concurrentTasks, 5) as AgentResult[];
 
     ts.after_inference = Date.now();

@@ -22,16 +22,23 @@ export function createMcpServer() {
  */
 export function setupHandlers(server: McpServer) {
     server.tool(
-        'spawn_parallel_agents',
+        'hive_swarm',
         {
-            role: z.string().describe('The role (ID) from roles.json to apply to the swarm'),
-            diff_chunks: z.array(z.object({
-                path: z.string().describe('Absolute or relative path to the file')
-            })).max(15).describe('Mapping of files to be analyzed by subagents (max 15)')
+            tasks: z.array(z.object({
+                path: z.string().describe('Absolute or relative path to the file'),
+                role: z.string().optional().describe('Optional: Preset role ID (e.g., discovery_agent, security_specialist)'),
+                custom_prompt: z.string().optional().describe('Optional: Custom system prompt to override/ignore the role registry')
+            })).max(15).describe('List of file-role pairs for the swarm')
         },
-        async ({ role, diff_chunks }) => {
+        async ({ tasks }) => {
             try {
-                const results = await orchestrate(diff_chunks as { path: string }[], role);
+                const { orchestrateSwarm } = await import('./orchestrator.js');
+                const mappedTasks = tasks.map(t => ({
+                    path: t.path,
+                    role: t.role,
+                    customPrompt: t.custom_prompt
+                }));
+                const results = await orchestrateSwarm(mappedTasks);
                 return {
                     content: [{ type: 'text' as const, text: JSON.stringify(results, null, 2) }]
                 };

@@ -4,26 +4,26 @@ export interface AgentTask {
     filePath: string;
     role: string;
     prompt: string;
+    customPrompt?: string;
 }
 
 /**
- * Expands a list of files into a set of agent tasks for a given role.
+ * Expands a list of file-role pairs into a set of agent tasks.
  * 
- * @param files - Array of file paths to analyze
- * @param role - The role to assign to each agent
+ * @param tasks - Array of objects with path, optional role, and optional customPrompt
  * @returns Array of AgentTask objects
- * @throws Error if the role is not found in the registry
  */
-export function expandRoles(files: string[], role: string): AgentTask[] {
-    const prompt = getRolePrompt(role);
-
-    if (!prompt) {
-        throw new Error(`Role "${role}" not found in registry`);
-    }
-
-    return files.map(filePath => ({
-        filePath,
-        role,
-        prompt
-    }));
+export function expandSwarm(tasks: { path: string, role?: string, customPrompt?: string }[]): AgentTask[] {
+    return tasks.map(t => {
+        const prompt = t.customPrompt || (t.role ? getRolePrompt(t.role) : undefined);
+        if (!prompt) {
+            throw new Error(`Task for "${t.path}" must provide either a valid "role" or a "customPrompt"`);
+        }
+        return {
+            filePath: t.path,
+            role: t.role || 'custom',
+            prompt,
+            customPrompt: t.customPrompt
+        };
+    });
 }

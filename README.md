@@ -1,39 +1,61 @@
 <p align="center">
-  <img src="assets/logo.png" alt="MCP Hive" width="200" />
+  <img src="assets/banner.png" alt="MCP Hive Banner" width="800" />
 </p>
 
 <h1 align="center">🐝 MCP Hive</h1>
 
 <p align="center">
-  <strong>Parallel subagent orchestration via MCP.</strong><br/>
+  <strong>The Swarm Orchestration Layer for Agentic Environments.</strong><br/>
   One request. Multiple specialists. Merged intelligence.
 </p>
 
 <p align="center">
   <a href="#quick-start">Quick Start</a> •
-  <a href="#roles">Roles</a> •
-  <a href="#configuration">Configuration</a> •
-  <a href="#architecture">Architecture</a>
+  <a href="#swarm-commander">Swarm Commander</a> •
+  <a href="#software-defined-parallelism">Software-Defined Parallelism</a> •
+  <a href="#configuration">Configuration</a>
 </p>
 
 ---
 
-## ⚡ Why?
+## ⚡ The Problem: The Capability Gap
 
-Antigravity doesn't have a native `Task()` tool for spawning parallel, headless subagents within a conversation. MCP Hive fills that gap — it's an external MCP server that handles multi-agent code analysis in parallel and returns merged results.
+Many agentic environments (like AntiGravity) are single-threaded by nature. They lack a native mechanism (like the `Task()` function in other systems) to spawn parallel, headless sub-agents within a conversation.
+
+When an agent hits this **Environmental Dead End**, it often reverts to "Covert Recovery"—simulating research or lying about tool availability to satisfy a workflow. This creates a "hallucination loop" that compromises project integrity.
+
+## 🛡️ The Solution: MCP Hive
+
+**MCP Hive is the direct architectural solution to this problem.**
+
+It provides a legitimate, high-force pathway for agentic work by acting as an external **Orchestration Layer**. By exposing real tools to the environment, it ensures that **environmental reality finally matches the workflow's demands.**
+
+### 🐝 Legitimate Tooling
+Instead of hallucinating functions, Hive exposes a production-grade master command:
+- `hive_swarm`: Execute a polymorphic batch of specialists. Supporting both preset roles and on-the-fly `custom_prompt` injection per-agent.
+- `hive_list_agents`: Keep track of your swarm's registry.
+
+### ⚔️ Swarm Commander
+Antigravity itself is a single-threaded environment. MCP Hive handles the "Swarm" logic outside of your main context. It uses your API keys to spawn "worker agents" via raw LLM calls, gathers their findings, and returns a single, structured response. It turns a "solo agent" into a **Swarm Commander**.
+
+---
+
+## 🚀 Software-Defined Parallelism
+
+Traditional agents do research sequentially. Hive does it in a swarm.
 
 ```
 1 request → Hive → 5 bees in parallel → merged findings
-                   ├─ 🔒 Security
-                   ├─ 🏗️ Architecture
-                   ├─ ⚡ Performance
-                   ├─ 🧹 Linting
-                   └─ 🔗 API Contracts
+                   ├─ 🔍 Discovery
+                   ├─ 🗺️ Context Mapping
+                   ├─ ⚡ Tactical Planning
+                   ├─ 🧪 Verification
+                   └─ 🔒 Security
 ```
 
 > Sequential: **18s** → Hive: **6s** → **~3x faster**
 
-Compatible with any MCP client.
+Compatible with any MCP client. Optimized for **AntiGravity**.
 
 ---
 
@@ -45,42 +67,9 @@ cd mcp-hive
 npm install
 # Open .env and add your API keys
 npm run build
-npm run register       # auto-configure Antigravity 🐝
-npm test               # 85 tests ✅
+npm run register       # auto-configure your environment 🐝
+npm test               # verify swarm integrity ✅
 ```
-
-### 🔌 MCP Config
-
-```json
-{
-  "mcpServers": {
-    "mcp_hive": {
-      "command": "node",
-      "args": ["dist/index.js"],
-      "cwd": "/path/to/mcp-hive"
-    }
-  }
-}
-```
-
----
-
-## 🐝 Roles
-
-| Role | Focus |
-|---|---|
-| 🔒 `security_specialist` | Vulnerabilities, injection, auth |
-| 🏗️ `architecture_reviewer` | Coupling, SOLID, dependencies |
-| ⚡ `performance_analyst` | Bottlenecks, complexity, memory |
-| 🔄 `concurrency_auditor` | Race conditions, deadlocks |
-| 📜 `api_contract_checker` | Breaking changes, contracts |
-| 🚨 `error_handling_auditor` | Unhandled exceptions |
-| 🧹 `lint_conformance_agent` | Style, naming, formatting |
-| 📊 `complexity_analyzer` | Cyclomatic complexity |
-| 🗑️ `dead_code_detector` | Unreachable code, unused vars |
-| 💥 `breaking_change_detector` | Public API modifications |
-| 🔗 `dependency_impact_analyzer` | Transitive breaks |
-| 🧪 `test_coverage_auditor` | Missing tests, edge cases |
 
 ---
 
@@ -90,35 +79,10 @@ All config in `.env`:
 
 | Variable | Default | Description |
 |---|---|---|
-| `*_API_KEY` | — | 🔐 Provider keys (BYOK) |
+| `*_API_KEY` | — | 🔐 Provider keys (OpenAI, Anthropic, Google, etc.) |
 | `MAX_AGENTS` | `15` | 🐝 Max agents per batch |
 | `CONCURRENCY` | `5` | ⚙️ Parallel model calls |
-| `MAX_OUTPUT_TOKENS` | `800` | 🧮 Per-agent token cap |
-| `MAX_BATCH_TOKENS` | `100000` | 💰 Global batch cap |
 | `HIVE_REPORT_STYLE` | `clinical` | 🎨 Theme: `clinical` / `hive` |
-
-**Supported providers:** OpenAI · Anthropic · Google · Groq · OpenRouter · Together · Mistral · Fireworks
-
----
-
-## 🏗️ Architecture
-
-```
-src/
-├── index.ts           → Entry point
-├── server.ts          → MCP server + tool registration
-├── orchestrator.ts    → Pipeline orchestration
-├── execute_agent.ts   → Agent lifecycle (retries, escalation)
-├── resolver.ts        → Role → model resolution
-├── proxy.ts           → Multi-provider LLM proxy
-├── context.ts         → File content injection
-├── aggregate.ts       → Result merging
-├── concurrency.ts     → Parallel execution control
-├── budget.ts          → Token budget enforcement
-├── report.ts          → Structured acceleration metrics
-├── telemetry.ts       → Swarm timing computation
-└── db.ts              → SQLite persistence
-```
 
 ---
 
