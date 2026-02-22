@@ -1,7 +1,7 @@
 {
   "name": "mcp-hive",
   "version": "1.0.0",
-  "description": "An MCP server that enables Antigravity to perform parallel subagent orchestration for accelerated code analysis.",
+  "description": "🐝 Parallel code analysis through specialized AI agents",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
