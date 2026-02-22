@@ -13,8 +13,7 @@
   <a href="#quick-start">Quick Start</a> •
   <a href="#roles">Roles</a> •
   <a href="#configuration">Configuration</a> •
-  <a href="#architecture">Architecture</a> •
-  <a href="#releases">Releases</a>
+  <a href="#architecture">Architecture</a>
 </p>
 
 ---
@@ -119,18 +118,6 @@ src/
 ├── telemetry.ts       → Swarm timing computation
 └── db.ts              → SQLite persistence
 ```
-
----
-
-## 📦 Releases
-
-### v1.0.0
-- Initial public release.
-- Parallel orchestration of 12+ specialized roles.
-- Multi-provider support with dynamic escalation (OpenAI, Anthropic, Google, Groq, etc.).
-- Headless architecture for CLI/Assistant integration.
-- Bounded concurrency and token budget enforcement.
-- Performance telemetry with speedup reporting.
 
 ---
 
