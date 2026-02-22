@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.png" alt="MCP Hive Banner" width="800" />
+  <img src="assets/banner.png" alt="MCP Hive Banner" width="100%" />
 </p>
 
 <h1 align="center">🐝 MCP Hive</h1>
