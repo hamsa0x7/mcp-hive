@@ -1,59 +1,65 @@
-import { orchestrate } from '../src/orchestrator.js';
-import dotenv from 'dotenv';
-import path from 'path';
+import * as path from 'path';
 import { fileURLToPath } from 'url';
-
-dotenv.config();
+import * as fs from 'fs';
+import { initializeDb, closeDb } from './src/db.js';
+import { validateAndConfigure } from './src/config.js';
+import { orchestrateSwarm, harvestSwarm } from './src/orchestrator.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Use a file from the codebase as the test subject
-const testFile = path.resolve(__dirname, '../src/health.ts');
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 async function runRealtimeTest() {
-    console.log('🚀 Starting Real-time Resilience Test...');
-    console.log(`📂 Testing with file: ${testFile}`);
+    console.log("=== STARTING REAL-TIME HIVE TEST ===");
 
     try {
-        const result = await orchestrate(
-            [{ path: testFile }],
-            'security_specialist',
-            'realtime-test-' + Date.now(),
-            'Analyze this file for any security weaknesses in its new health check logic.'
-        );
+        const providers = validateAndConfigure();
+        console.log(`[Config] Available providers: ${providers.join(', ')}`);
 
-        console.log('\n✅ Swarm Results Received:');
-        console.log(`Total Agents: ${result.total_agents}`);
-        console.log(`Successful: ${result.successful}`);
-        console.log(`Failed Roles: ${JSON.stringify(result.failed_roles)}`);
+        const dbPath = path.resolve(__dirname, 'test_hive.db');
+        try { fs.unlinkSync(dbPath) } catch (e) { }
+        try { fs.unlinkSync(dbPath + '-wal') } catch (e) { }
+        try { fs.unlinkSync(dbPath + '-shm') } catch (e) { }
 
-        if (result.results.length > 0) {
-            console.log('\n🔍 First Agent Findings:');
-            const firstAgent = result.results[0];
-            console.log(`Status: ${firstAgent.status}`);
-            console.log(`Provider: ${firstAgent.provider}`);
-            console.log(`Model: ${firstAgent.model}`);
+        initializeDb(dbPath);
+        console.log(`[DB] Initialize SQLite shared board at ${dbPath}`);
 
-            if (firstAgent.findings) {
-                firstAgent.findings.forEach((f: any) => {
-                    console.log(`  - [${f.severity}] ${f.type}: ${f.description}`);
-                });
-            }
+        const packageJsonPath = path.resolve(__dirname, 'package.json');
+
+        const tasks = [
+            { path: packageJsonPath, role: 'security_auditor', customPrompt: 'Analyze this package.json for any outdated dependencies or known vulnerabilities. You must return valid JSON matching the exact expected format.' },
+            { path: packageJsonPath, role: 'linter', customPrompt: 'Check this package.json for missing standard fields like author or license. You must return valid JSON matching the exact expected format.' }
+        ];
+
+        console.log(`[Swarm] Dispatching ${tasks.length} tasks in background...`);
+        const batchId = 'realtime-test-' + Date.now();
+        const initialBatch = await orchestrateSwarm(tasks, batchId);
+
+        console.log(`[Swarm] Background process initiated (ID: ${batchId}). Waiting for completion...`);
+
+        // Poll for completion
+        let result: any = { status: 'processing' };
+        let polls = 0;
+
+        while (result.status === 'processing' && polls < 30) {
+            await sleep(2000);
+            result = await harvestSwarm(batchId);
+            process.stdout.write(".");
+            polls++;
         }
 
-        if (result.metrics) {
-            console.log('\n📊 Swarm Metrics:');
-            console.log(`  Wall Time: ${result.metrics.total_wall_time_ms}ms`);
-            console.log(`  Circuit Breaker States: ${JSON.stringify(result.metrics.circuit_breakers)}`);
-            console.log(`  Queue Depth: ${JSON.stringify(result.metrics.global_queue)}`);
-            console.log(`  Health Metrics: ${JSON.stringify(result.metrics.health_metrics)}`);
-        }
+        console.log("\n\n=== FINAL SWARM RESULTS ===");
+        console.log(JSON.stringify(result, null, 2));
 
-    } catch (error: any) {
-        console.error('\n❌ Real-time Test Failed:');
-        console.error(error.message);
-        if (error.stack) console.error(error.stack);
+    } catch (err: any) {
+        console.error("\n[CRITICAL ERROR] The test crashed entirely.");
+        console.error(err);
+    } finally {
+        console.log("\n[DB] Closing connection...");
+        // Give background promises a tiny bit of time to settle if crash occurred
+        await sleep(500);
+        closeDb();
     }
 }
 
