@@ -5,48 +5,59 @@
 <h1 align="center"> MCP Hive</h1>
 
 <p align="center">
-  <strong>The Orchestration Layer for Complex Agentic Work.</strong><br/>
-  Antigravity (Queen) • MCP Hive (Drone) • Subagents (Worker Bees)
+  <strong>The Swarm Orchestration Layer for Complex Agentic Work.</strong><br/>
+  Queen (The Agent) • Drone (MCP Hive) • Worker Bees (Subagents)
 </p>
 
 <p align="center">
-  <a href="#the-story-breaking-the-hallucination-loop">The Story</a> •
-  <a href="#the-hierarchy">The Hierarchy</a> •
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#configuration">Configuration</a>
+  <a href="#the-problem-the-capability-gap">The Problem</a> •
+  <a href="#the-solution-mcp-hive">The Solution</a> •
+  <a href="#the-hierarchy-of-the-hive">The Hierarchy</a> •
+  <a href="#quick-start">Quick Start</a>
 </p>
 
 ---
 
-##  The Story: Breaking the Hallucination Loop
+##  The Problem: The Capability Gap
 
-If you’ve spent enough time working with LLM-based coding agents, you’ve eventually hit "The Wall." You ask for a complex multi-file audit or a major refactor, and your primary agent—constrained by its single-threaded nature—reaches its limit. It can't "think" in parallel.
+Many agentic environments (like AntiGravity) are single-threaded by nature. They lack a native mechanism (like the `Task()` function in other systems) to spawn parallel, headless sub-agents within a conversation.
 
-This is where the **Hallucination Loop** begins. To satisfy your workflow, the agent starts "simulating" research. It tells you it "verified the security logs" or "checked the dependencies," when in reality, it just sat in the same context window, making its best guess because it had no other way to satisfy the requirement.
+When an agent hits this **Environmental Dead End**, it often reverts to "Covert Recovery"—simulating research or lying about tool availability to satisfy a workflow. This creates a "hallucination loop" that compromises project integrity.
 
-**MCP Hive** was built to solve this environmental dead end by establishing a high-force production environment.
+I particularly faced this bottleneck while building complex systems in **AntiGravity**, and many other agentic IDEs suffer from the same limitation. **MCP Hive** was developed specifically to solve this for AntiGravity but is designed to be compatible with most agentic platforms.
+
+##  The Solution: MCP Hive
+
+**MCP Hive is the direct architectural solution to this problem.**
+
+It provides a legitimate, high-force pathway for agentic work by acting as an external **Orchestration Layer**. By exposing real tools to the environment, it ensures that **environmental reality finally matches the workflow's demands.**
+
+###  Legitimate Tooling
+Instead of hallucinating functions, Hive exposes a production-grade master command suite:
+- **`hive_swarm`**: Launch an asynchronous polymorphic swarm batch (`path`, optional `role`, optional `custom_prompt`, optional `requested_strength`, optional `workspace_root`).
+- **`hive_harvest`**: Collect results for a previously launched swarm by `swarm_id`.
+- **`hive_post_insight`**: Post cross-bee discoveries/blockers to the shared board.
+- **`hive_spawn_subtask`**: Spawn specialized follow-up work from an in-flight swarm task.
+
+###  Swarm Commander
+Antigravity itself is a single-threaded environment. MCP Hive handles the "Swarm" logic outside of your main context. It uses your API keys to spawn "worker agents" via raw LLM calls, gathers their findings, and returns a single, structured response. It turns a "solo agent" into a **Swarm Commander**.
+
+---
 
 ##  The Hierarchy of the Hive
 
-Effective swarming requires a clear chain of command. In our production environment:
+In our production environment, the **Hive**, effective swarming follows a clear chain of command:
 
-1.  👑 **The Queen (Antigravity)**: The primary agent. She owns the conversation, the strategy, and the ultimate decision-making. She is the single source of truth for the project.
-2.  🎬 **The Drone (MCP Hive)**: The technical orchestrator. The Drone listens to the Queen and manages the logistics of the swarm—handling API keys, model routing, and parallelization.
-3.  🐝 **The Worker Bees (Subagents)**: The specialists. These are parallel, headless agents spawned by the Drone to perform surgical tasks (Security Audit, Logic Review, Context Mapping).
-4.  🏟️ **The Hive**: Your production environment. It is the space where this entire system lives and breathes.
-
-##  The Solution: High-Force Delegation
-
-The Queen handles the strategy, while the **Drone** handles the brute-force technical execution:
-
-- **`hive_swarm`**: The Queen launches a swarm. The Drone handles the decomposition—assigning different specialists (Worker Bees) to different file chunks simultaneously.
-- **`hive_harvest`**: The Drone gathers the merged findings and returns them to the Queen. No more bloated context windows; just surgical results.
-- **`hive_post_insight`**: Allows Worker Bees to share discoveries in real-time on a shared board, visible to the entire swarm.
-- **`hive_spawn_subtask`**: Allows Worker Bees to request a *new* specialist Bee mid-flight if they discover an unexpected sub-problem.
+1.  👑 **The Queen (The Agent)**: YOU. The primary agent session. The Queen owns the strategy, the conversation context, and the ultimate decision-making. 
+2.  🎬 **The Drone (MCP Hive)**: The technical orchestrator. The Drone listens to the Queen and manages the brute-force swarm logistics—API keys, model routing, and parallelization.
+3.  🐝 **The Worker Bees (Subagents)**: The specialists. Headless agents spawned by the Drone to perform surgical tasks (Security Audit, Logic Review, Context Mapping) in parallel.
 
 ---
 
 ##  Quick Start
+
+> [!TIP]
+> **Ask your primary Agent (The Queen) to handle the install and registration for you!** She can execute these commands directly in your workspace.
 
 1.  **Clone & Install**:
     ```bash
@@ -60,21 +71,22 @@ The Queen handles the strategy, while the **Drone** handles the brute-force tech
     ```bash
     npm run register
     ```
-    This auto-writes your paths to your global `mcp_config.json`.
+    This auto-writes your paths (`command`, `cwd`, and `HIVE_ALLOWLIST_ROOT`) to your global `mcp_config.json`.
 
 3.  **Add Keys**:
-    Replace API key placeholders in your `mcp_config.json` with real credentials.
+    Open your `mcp_config.json` and replace the API key placeholders (e.g., `<OPENAI_API_KEY>`) with your real credentials.
 
 4.  **Verify**:
-    Restart your MCP client and ask: *"`Analyze src/server.ts using hive_swarm`"*
+    Restart your client and let the Queen launch a test swarm: *"`Analyze src/server.ts using hive_swarm`"*
 
 ---
 
-##  Governance
+##  Governance & Security
 
-- **Concurrency Control**: 50 active outbound requests (process-wide) with a 5-request cap per provider per swarm.
-- **Scale**: Up to 15 parallel specialists per batch.
-- **Security**: Strict path sandboxing with Symlink Escape protection.
+- **Concurrency**: 50 active outbound requests (process-wide) with a 5-request cap per provider per swarm.
+- **Scale**: Up to 15 parallel Worker Bees per batch.
+- **Redundancy**: Integrated Circuit Breakers and 3-tier provider failover.
+- **Path Sandboxing**: Strict root enforcement with Symlink Escape protection (Drone-managed).
 
 ---
 
