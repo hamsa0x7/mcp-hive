@@ -28,11 +28,12 @@ Thumbs.db
 *.log
 *_output.txt
 test_output*.txt
+vitest_output.txt
+realtime_output.txt
 old_readme.md
 
-# Planning (internal dev artifacts)
+# Planning and Examples
 .planning/
 mcp-hive-plan.md
-
-# Local env files
-.env.local
+*.example.json
+*.bak
