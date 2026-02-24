@@ -5,7 +5,7 @@ import { computeComparison, BenchmarkComparison } from './telemetry.js';
 
 /**
  * Runs agents sequentially (no concurrency) to establish a baseline.
- * Uses the same models, payloads, and retry logic as Hive —
+ * Uses the same models, payloads, and retry logic as Hive 
  * the only difference is sequential vs parallel execution.
  */
 export async function benchmarkSequential(

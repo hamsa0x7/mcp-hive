@@ -33,7 +33,7 @@ describe('Benchmark Sequential Baseline', () => {
 
         expect(result.results).toHaveLength(3);
         expect(result.results.every(r => r.status === 'success')).toBe(true);
-        // Sequential: 3 × 50ms = ~150ms minimum
+        // Sequential: 3  50ms = ~150ms minimum
         expect(result.total_ms).toBeGreaterThanOrEqual(100); // allow some timing slack
     });
 

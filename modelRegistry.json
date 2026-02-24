@@ -1,111 +1,584 @@
 {
-    "deepseek-r1": {
-        "strengths": [
-            "deep_reasoning",
-            "complex_logic",
-            "concurrency_analysis",
-            "breaking_change_detection",
-            "dependency_analysis"
-        ],
-        "providers": {
-            "openrouter": "deepseek/deepseek-r1",
-            "together": "deepseek-ai/DeepSeek-R1",
-            "groq": "deepseek-r1-distill-llama-70b"
-        }
+  "o3": {
+    "strengths": [
+      "deep_reasoning",
+      "complex_logic",
+      "architecture_analysis",
+      "security_detection",
+      "dependency_analysis",
+      "strategic_planning",
+      "quality_assurance"
+    ],
+    "providers": {
+      "openai": "o3",
+      "openrouter": "openai/o3",
+      "azure_openai": "o3"
     },
-    "deepseek-v3": {
-        "strengths": [
-            "security_detection",
-            "architecture_analysis",
-            "performance_analysis",
-            "api_analysis",
-            "error_analysis",
-            "breaking_change_detection"
-        ],
-        "providers": {
-            "openrouter": "deepseek/deepseek-v3",
-            "together": "deepseek-ai/DeepSeek-V3",
-            "fireworks": "accounts/fireworks/models/deepseek-v3"
-        }
+    "reasoning": true
+  },
+  "o3-mini": {
+    "strengths": [
+      "deep_reasoning",
+      "complex_logic",
+      "error_analysis",
+      "test_analysis",
+      "debugging"
+    ],
+    "providers": {
+      "openai": "o3-mini",
+      "openrouter": "openai/o3-mini",
+      "azure_openai": "o3-mini"
     },
-    "qwen-2.5-coder-32b": {
-        "strengths": [
-            "linting",
-            "complexity_analysis",
-            "dead_code_detection",
-            "test_analysis",
-            "structured_output"
-        ],
-        "providers": {
-            "groq": "qwen-2.5-coder-32b",
-            "openrouter": "qwen/qwen-2.5-coder-32b-instruct",
-            "together": "Qwen/Qwen2.5-Coder-32B-Instruct",
-            "fireworks": "qwen-coder-2.5-32b"
-        }
+    "reasoning": true
+  },
+  "o4-mini": {
+    "strengths": [
+      "reasoning_math",
+      "deep_reasoning",
+      "architecture_analysis",
+      "error_analysis",
+      "debugging",
+      "planning"
+    ],
+    "providers": {
+      "openai": "o4-mini",
+      "openrouter": "openai/o4-mini",
+      "azure_openai": "o4-mini"
     },
-    "claude-3.5-sonnet": {
-        "strengths": [
-            "architecture_analysis",
-            "security_detection",
-            "api_analysis",
-            "concurrency_analysis",
-            "breaking_change_detection",
-            "dependency_analysis"
-        ],
-        "providers": {
-            "anthropic": "claude-3-5-sonnet-latest",
-            "openrouter": "anthropic/claude-3.5-sonnet"
-        }
-    },
-    "gpt-4o": {
-        "strengths": [
-            "security_detection",
-            "architecture_analysis",
-            "performance_analysis",
-            "error_analysis",
-            "api_analysis",
-            "test_analysis"
-        ],
-        "providers": {
-            "openai": "gpt-4o",
-            "openrouter": "openai/gpt-4o"
-        }
-    },
-    "gpt-4o-mini": {
-        "strengths": [
-            "linting",
-            "dead_code_detection",
-            "complexity_analysis",
-            "fast_detection"
-        ],
-        "providers": {
-            "openai": "gpt-4o-mini",
-            "openrouter": "openai/gpt-4o-mini"
-        }
-    },
-    "gemini-1.5-flash": {
-        "strengths": [
-            "linting",
-            "dead_code_detection",
-            "complexity_analysis",
-            "fast_detection"
-        ],
-        "providers": {
-            "google": "gemini-1.5-flash",
-            "openrouter": "google/gemini-flash-1.5"
-        }
-    },
-    "llama-3.3-70b": {
-        "strengths": [
-            "error_analysis",
-            "performance_analysis",
-            "test_analysis",
-            "structured_output"
-        ],
-        "providers": {
-            "groq": "llama-3.3-70b-versatile",
-            "openrouter": "meta-llama/llama-3.3-70b-instruct",
-            "together": "meta-llama/Llama-3.3-70B-Instruct-Turbo"
-        }
+    "reasoning": true
+  },
+  "gpt-4.1": {
+    "strengths": [
+      "architecture_analysis",
+      "security_detection",
+      "api_analysis",
+      "performance_analysis",
+      "test_analysis",
+      "tool_use",
+      "code_generation",
+      "refactoring",
+      "documentation_generation",
+      "knowledge_retrieval"
+    ],
+    "providers": {
+      "openai": "gpt-4.1",
+      "openrouter": "openai/gpt-4.1",
+      "azure_openai": "gpt-4.1"
     }
+  },
+  "gpt-4.1-mini": {
+    "strengths": [
+      "linting",
+      "dead_code_detection",
+      "complexity_analysis",
+      "test_analysis",
+      "fast_detection",
+      "documentation_generation"
+    ],
+    "providers": {
+      "openai": "gpt-4.1-mini",
+      "openrouter": "openai/gpt-4.1-mini",
+      "azure_openai": "gpt-4.1-mini"
+    }
+  },
+  "gpt-4o": {
+    "strengths": [
+      "security_detection",
+      "architecture_analysis",
+      "performance_analysis",
+      "error_analysis",
+      "api_analysis",
+      "test_analysis",
+      "knowledge_retrieval",
+      "strategic_planning",
+      "quality_assurance",
+      "vision_analysis"
+    ],
+    "providers": {
+      "openai": "gpt-4o",
+      "openrouter": "openai/gpt-4o",
+      "azure_openai": "gpt-4o"
+    }
+  },
+  "gpt-4o-mini": {
+    "strengths": [
+      "linting",
+      "dead_code_detection",
+      "complexity_analysis",
+      "fast_detection",
+      "documentation_generation"
+    ],
+    "providers": {
+      "openai": "gpt-4o-mini",
+      "openrouter": "openai/gpt-4o-mini",
+      "azure_openai": "gpt-4o-mini"
+    }
+  },
+  "claude-3.7-sonnet": {
+    "strengths": [
+      "architecture_analysis",
+      "security_detection",
+      "api_analysis",
+      "concurrency_analysis",
+      "breaking_change_detection",
+      "dependency_analysis",
+      "planning",
+      "long_context"
+    ],
+    "providers": {
+      "anthropic": "claude-3-7-sonnet-latest",
+      "openrouter": "anthropic/claude-3.7-sonnet"
+    }
+  },
+  "claude-3.5-sonnet": {
+    "strengths": [
+      "architecture_analysis",
+      "security_detection",
+      "api_analysis",
+      "concurrency_analysis",
+      "breaking_change_detection",
+      "dependency_analysis",
+      "long_context"
+    ],
+    "providers": {
+      "anthropic": "claude-3-5-sonnet-20241022",
+      "openrouter": "anthropic/claude-3.5-sonnet"
+    }
+  },
+  "claude-3.5-haiku": {
+    "strengths": [
+      "linting",
+      "dead_code_detection",
+      "complexity_analysis",
+      "error_analysis",
+      "fast_detection",
+      "structured_output"
+    ],
+    "providers": {
+      "anthropic": "claude-3-5-haiku-20241022",
+      "openrouter": "anthropic/claude-3.5-haiku"
+    }
+  },
+  "gemini-2.0-flash": {
+    "strengths": [
+      "fast_detection",
+      "api_analysis",
+      "test_analysis",
+      "documentation_generation",
+      "tool_use",
+      "vision_analysis"
+    ],
+    "providers": {
+      "google": "gemini-2.0-flash",
+      "openrouter": "google/gemini-2.0-flash-001"
+    }
+  },
+  "gemini-2.0-flash-lite": {
+    "strengths": [
+      "fast_detection",
+      "linting",
+      "dead_code_detection",
+      "structured_output"
+    ],
+    "providers": {
+      "google": "gemini-2.0-flash-lite",
+      "openrouter": "google/gemini-2.0-flash-lite-001"
+    }
+  },
+  "gemini-1.5-pro": {
+    "strengths": [
+      "architecture_analysis",
+      "dependency_analysis",
+      "knowledge_retrieval",
+      "long_context",
+      "planning"
+    ],
+    "providers": {
+      "google": "gemini-1.5-pro",
+      "openrouter": "google/gemini-pro-1.5"
+    }
+  },
+  "gemini-1.5-flash": {
+    "strengths": [
+      "linting",
+      "dead_code_detection",
+      "complexity_analysis",
+      "fast_detection"
+    ],
+    "providers": {
+      "google": "gemini-1.5-flash",
+      "openrouter": "google/gemini-flash-1.5"
+    }
+  },
+  "deepseek-r1": {
+    "strengths": [
+      "deep_reasoning",
+      "complex_logic",
+      "concurrency_analysis",
+      "breaking_change_detection",
+      "dependency_analysis",
+      "reasoning_math"
+    ],
+    "providers": {
+      "openrouter": "deepseek/deepseek-r1",
+      "together": "deepseek-ai/DeepSeek-R1",
+      "groq": "deepseek-r1-distill-llama-70b",
+      "deepinfra": "deepseek-ai/DeepSeek-R1",
+      "llm7": "deepseek/deepseek-r1",
+      "ollama": "deepseek-r1"
+    },
+    "reasoning": true
+  },
+  "deepseek-v3": {
+    "strengths": [
+      "security_detection",
+      "architecture_analysis",
+      "performance_analysis",
+      "api_analysis",
+      "error_analysis",
+      "code_generation",
+      "refactoring"
+    ],
+    "providers": {
+      "openrouter": "deepseek/deepseek-v3",
+      "together": "deepseek-ai/DeepSeek-V3",
+      "fireworks": "accounts/fireworks/models/deepseek-v3",
+      "deepinfra": "deepseek-ai/DeepSeek-V3",
+      "llm7": "deepseek/deepseek-v3"
+    }
+  },
+  "qwen-2.5-coder-32b": {
+    "strengths": [
+      "linting",
+      "complexity_analysis",
+      "dead_code_detection",
+      "test_analysis",
+      "structured_output",
+      "code_generation",
+      "refactoring",
+      "debugging"
+    ],
+    "providers": {
+      "groq": "qwen2.5-32b",
+      "openrouter": "qwen/qwen-2.5-coder-32b-instruct",
+      "together": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "fireworks": "qwen-coder-2.5-32b",
+      "deepinfra": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "llm7": "qwen/qwen-2.5-coder-32b-instruct",
+      "ollama": "qwen2.5-coder:32b"
+    }
+  },
+  "qwen-2.5-coder-14b": {
+    "strengths": [
+      "linting",
+      "complexity_analysis",
+      "dead_code_detection",
+      "code_generation",
+      "debugging",
+      "fast_detection"
+    ],
+    "providers": {
+      "openrouter": "qwen/qwen-2.5-coder-14b-instruct",
+      "together": "Qwen/Qwen2.5-Coder-14B-Instruct",
+      "deepinfra": "Qwen/Qwen2.5-Coder-14B-Instruct",
+      "ollama": "qwen2.5-coder:14b"
+    }
+  },
+  "llama-3.3-70b": {
+    "strengths": [
+      "error_analysis",
+      "performance_analysis",
+      "test_analysis",
+      "structured_output",
+      "documentation_generation"
+    ],
+    "providers": {
+      "groq": "llama-3.3-70b-versatile",
+      "openrouter": "meta-llama/llama-3.3-70b-instruct",
+      "together": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+      "fireworks": "accounts/fireworks/models/llama-v3p3-70b-instruct",
+      "deepinfra": "meta-llama/Llama-3.3-70B-Instruct",
+      "llm7": "meta-llama/llama-3.3-70b-instruct",
+      "ollama": "llama3.3"
+    }
+  },
+  "llama-3.1-70b": {
+    "strengths": [
+      "architecture_analysis",
+      "api_analysis",
+      "error_analysis",
+      "performance_analysis",
+      "structured_output"
+    ],
+    "providers": {
+      "openrouter": "meta-llama/llama-3.1-70b-instruct",
+      "together": "meta-llama/Llama-3.1-70B-Instruct-Turbo",
+      "deepinfra": "meta-llama/Meta-Llama-3.1-70B-Instruct",
+      "nvidia": "meta/llama-3.1-70b-instruct"
+    }
+  },
+  "llama-3.1-8b": {
+    "strengths": [
+      "security_detection",
+      "architecture_analysis",
+      "performance_analysis",
+      "error_analysis",
+      "api_analysis",
+      "fast_detection"
+    ],
+    "providers": {
+      "groq": "llama-3.1-8b-instant",
+      "openrouter": "meta-llama/llama-3.1-8b-instant",
+      "deepinfra": "meta-llama/Meta-Llama-3.1-8B-Instruct",
+      "llm7": "meta-llama/llama-3.1-8b-instant",
+      "ollama": "llama3.1"
+    }
+  },
+  "mixtral-8x7b": {
+    "strengths": [
+      "security_detection",
+      "architecture_analysis",
+      "performance_analysis",
+      "error_analysis",
+      "api_analysis"
+    ],
+    "providers": {
+      "mistral": "open-mixtral-8x7b",
+      "openrouter": "mistralai/mixtral-8x7b",
+      "deepinfra": "mistralai/Mixtral-8x7B-Instruct-v0.1"
+    }
+  },
+  "mistral-large": {
+    "strengths": [
+      "architecture_analysis",
+      "api_analysis",
+      "performance_analysis",
+      "quality_assurance",
+      "planning"
+    ],
+    "providers": {
+      "mistral": "mistral-large-latest",
+      "openrouter": "mistralai/mistral-large"
+    }
+  },
+  "ministral-8b": {
+    "strengths": [
+      "linting",
+      "fast_detection",
+      "structured_output",
+      "documentation_generation"
+    ],
+    "providers": {
+      "mistral": "ministral-8b-latest",
+      "openrouter": "mistralai/ministral-8b"
+    }
+  },
+  "mistral-7b": {
+    "strengths": [
+      "security_detection",
+      "architecture_analysis",
+      "performance_analysis",
+      "linting",
+      "complexity_analysis"
+    ],
+    "providers": {
+      "mistral": "open-mistral-7b",
+      "openrouter": "mistralai/mistral-7b",
+      "llm7": "mistralai/mistral-7b",
+      "ollama": "mistral"
+    }
+  },
+  "command-r-plus": {
+    "strengths": [
+      "knowledge_retrieval",
+      "documentation_generation",
+      "api_analysis",
+      "long_context",
+      "tool_use"
+    ],
+    "providers": {
+      "cohere": "command-r-plus",
+      "openrouter": "cohere/command-r-plus"
+    }
+  },
+  "command-r": {
+    "strengths": [
+      "knowledge_retrieval",
+      "documentation_generation",
+      "structured_output",
+      "fast_detection"
+    ],
+    "providers": {
+      "cohere": "command-r",
+      "openrouter": "cohere/command-r"
+    }
+  },
+  "grok-2": {
+    "strengths": [
+      "reasoning_math",
+      "deep_reasoning",
+      "api_analysis",
+      "strategic_planning",
+      "quality_assurance"
+    ],
+    "providers": {
+      "xai": "grok-2-latest",
+      "openrouter": "x-ai/grok-2"
+    }
+  },
+  "grok-2-mini": {
+    "strengths": [
+      "fast_detection",
+      "error_analysis",
+      "structured_output",
+      "documentation_generation"
+    ],
+    "providers": {
+      "xai": "grok-2-mini-latest",
+      "openrouter": "x-ai/grok-2-mini"
+    }
+  },
+  "sonar-pro": {
+    "strengths": [
+      "knowledge_retrieval",
+      "api_analysis",
+      "documentation_generation",
+      "strategic_planning"
+    ],
+    "providers": {
+      "perplexity": "sonar-pro",
+      "openrouter": "perplexity/sonar-pro"
+    }
+  },
+  "sonar-small": {
+    "strengths": [
+      "knowledge_retrieval",
+      "fast_detection",
+      "structured_output"
+    ],
+    "providers": {
+      "perplexity": "sonar-small-chat",
+      "openrouter": "perplexity/sonar-small-chat"
+    }
+  },
+  "phi-4": {
+    "strengths": [
+      "reasoning_math",
+      "structured_output",
+      "error_analysis",
+      "code_generation"
+    ],
+    "providers": {
+      "openrouter": "microsoft/phi-4",
+      "deepinfra": "microsoft/phi-4"
+    }
+  },
+  "qwq-32b": {
+    "strengths": [
+      "deep_reasoning",
+      "complex_logic",
+      "reasoning_math",
+      "debugging"
+    ],
+    "providers": {
+      "openrouter": "qwen/qwq-32b",
+      "deepinfra": "Qwen/QwQ-32B"
+    },
+    "reasoning": true
+  },
+  "codestral": {
+    "strengths": [
+      "code_generation",
+      "refactoring",
+      "linting",
+      "test_analysis",
+      "debugging"
+    ],
+    "providers": {
+      "mistral": "codestral-latest",
+      "openrouter": "mistralai/codestral-2501"
+    }
+  },
+  "nemotron-4-340b": {
+    "strengths": [
+      "architecture_analysis",
+      "performance_analysis",
+      "knowledge_retrieval",
+      "quality_assurance"
+    ],
+    "providers": {
+      "nvidia": "nvidia/nemotron-4-340b-instruct",
+      "openrouter": "nvidia/nemotron-4-340b-instruct"
+    }
+  },
+  "cerebras-llama3.1-70b": {
+    "strengths": [
+      "fast_detection",
+      "api_analysis",
+      "error_analysis",
+      "performance_analysis"
+    ],
+    "providers": {
+      "cerebras": "llama3.1-70b",
+      "openrouter": "meta-llama/llama-3.1-70b-instruct"
+    }
+  },
+  "sambanova-llama3.1-405b": {
+    "strengths": [
+      "deep_reasoning",
+      "architecture_analysis",
+      "quality_assurance",
+      "strategic_planning"
+    ],
+    "providers": {
+      "sambanova": "Meta-Llama-3.1-405B-Instruct",
+      "openrouter": "meta-llama/llama-3.1-405b-instruct"
+    }
+  },
+  "novita-llama3.1-70b": {
+    "strengths": [
+      "architecture_analysis",
+      "api_analysis",
+      "error_analysis",
+      "structured_output"
+    ],
+    "providers": {
+      "novita": "meta-llama/llama-3.1-70b-instruct",
+      "openrouter": "meta-llama/llama-3.1-70b-instruct"
+    }
+  },
+  "hyperbolic-qwen2.5-coder-32b": {
+    "strengths": [
+      "code_generation",
+      "refactoring",
+      "linting",
+      "complexity_analysis",
+      "debugging"
+    ],
+    "providers": {
+      "hyperbolic": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "openrouter": "qwen/qwen-2.5-coder-32b-instruct"
+    }
+  },
+  "ollama-llama3.2": {
+    "strengths": [
+      "fast_detection",
+      "linting",
+      "error_analysis"
+    ],
+    "providers": {
+      "ollama": "llama3.2"
+    }
+  },
+  "ollama-codellama": {
+    "strengths": [
+      "code_generation",
+      "linting",
+      "refactoring",
+      "debugging"
+    ],
+    "providers": {
+      "ollama": "codellama"
+    }
+  }
 }

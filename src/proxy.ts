@@ -1,6 +1,16 @@
 import { logExecution } from './db.js';
-import { getProviderConfig, ProviderConfig, ProviderName } from './providers.js';
-import { PER_ATTEMPT_TIMEOUT_MS } from './types.js';
+import {
+    getProviderConfig,
+    ProviderConfig,
+    ProviderName,
+    buildProviderRequest,
+    extractAssistantContent,
+    extractTokenUsage
+} from './providers.js';
+import { PER_ATTEMPT_TIMEOUT_MS, FindingsArraySchema } from './types.js';
+import { repairJson, structuralRepair } from './repair.js';
+
+const MAX_OUTPUT_TOKENS = parseInt(process.env.MAX_OUTPUT_TOKENS || '1200');
 
 /**
  * Structured error thrown by callModel with HTTP status attached.
@@ -25,34 +35,34 @@ async function executeRequest(
     config: ProviderConfig,
     systemPrompt: string,
     userPrompt: string,
-    model: string
+    model: string,
+    isReasoning: boolean
 ): Promise<any> {
-    const url = `${config.baseUrl}/chat/completions`;
+    const request = buildProviderRequest(config, systemPrompt, userPrompt, model, MAX_OUTPUT_TOKENS);
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), PER_ATTEMPT_TIMEOUT_MS);
+    const timeoutMs = isReasoning ? 120_000 : PER_ATTEMPT_TIMEOUT_MS;
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${config.apiKey}`
-            },
-            body: JSON.stringify({
-                model: model,
-                messages: [
-                    { role: 'system', content: systemPrompt },
-                    { role: 'user', content: userPrompt }
-                ],
-                max_tokens: parseInt(process.env.MAX_OUTPUT_TOKENS || '1200')
-            }),
+        const response = await fetch(request.url, {
+            method: request.method,
+            headers: request.headers,
+            body: request.body ? JSON.stringify(request.body) : undefined,
             signal: controller.signal
         });
 
         if (!response.ok) {
+            let providerCode: string | undefined = undefined;
+            try {
+                const errorPayload = await response.json() as any;
+                providerCode = errorPayload?.error?.type || errorPayload?.error?.code || errorPayload?.code;
+            } catch (_err) {
+                // Best-effort extraction only
+            }
             throw new ModelCallError(
                 `HTTP ${response.status} from ${config.name}/${model}`,
-                response.status
+                response.status,
+                providerCode
             );
         }
 
@@ -63,7 +73,7 @@ async function executeRequest(
 
         // AbortController timeout or network error
         if (err.name === 'AbortError') {
-            const abortErr = new ModelCallError(`Timeout after ${PER_ATTEMPT_TIMEOUT_MS}ms on ${config.name}/${model}`, 0, 'ABORT_ERR');
+            const abortErr = new ModelCallError(`Timeout after ${timeoutMs}ms on ${config.name}/${model}`, 0, 'ABORT_ERR');
             abortErr.name = 'AbortError';
             throw abortErr;
         }
@@ -83,7 +93,7 @@ async function executeRequest(
  * Single-candidate model executor.
  *
  * Executes one request against one provider/model pair.
- * Does NOT retry — retry logic lives in executeAgent().
+ * Does NOT retry  retry logic lives in executeAgent().
  * Throws ModelCallError on any failure for the caller to classify.
  */
 export async function callModel(
@@ -91,27 +101,46 @@ export async function callModel(
     systemPrompt: string,
     userPrompt: string,
     providerName: ProviderName,
-    modelString: string
+    modelString: string,
+    isReasoning: boolean = false
 ): Promise<any> {
     const config = getProviderConfig(providerName);
     const start = Date.now();
 
-    const data = await executeRequest(config, systemPrompt, userPrompt, modelString);
+    const data = await executeRequest(config, systemPrompt, userPrompt, modelString, isReasoning);
 
     const durationMs = Date.now() - start;
-    const content = data.choices?.[0]?.message?.content ?? '';
+    const content = extractAssistantContent(config, data);
 
     let parsedResult: any;
     let findingsCount = 0;
 
+    let preParsed: any;
     try {
-        parsedResult = JSON.parse(content);
-        findingsCount = Array.isArray(parsedResult) ? parsedResult.length : 0;
+        preParsed = JSON.parse(content);
     } catch {
-        parsedResult = content;
+        // Tier 1 Repair: Syntax/Markdown Patch
+        const repaired = repairJson(content);
+        try {
+            preParsed = JSON.parse(repaired);
+        } catch {
+            throw new ModelCallError('JSON Structure was fundamentally invalid and unrepairable by local engine.', 422, 'VALIDATION_ERROR');
+        }
     }
 
-    const tokens = (data.usage?.prompt_tokens || 0) + (data.usage?.completion_tokens || 0);
+    // Tier 2 Repair: Structural coercion
+    const coerced = structuralRepair(preParsed);
+    const validationResult = FindingsArraySchema.safeParse(coerced);
+
+    if (!validationResult.success) {
+        throw new ModelCallError(`JSON Structure violated schema: ${validationResult.error.message}`, 422, 'VALIDATION_ERROR');
+    }
+
+    parsedResult = validationResult.data;
+    findingsCount = parsedResult.length;
+
+    const usage = extractTokenUsage(config, data);
+    const tokens = usage.promptTokens + usage.completionTokens;
     logExecution(batchId, tokens, findingsCount, durationMs);
 
     return parsedResult;

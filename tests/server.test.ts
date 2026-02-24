@@ -8,12 +8,14 @@ describe('MCP Server Init', () => {
         expect(server).toBeDefined();
         // Since we can't easily peek into the private server name via public API, 
         // we verify it exists and is initialized.
-    });
+        await server.close();
+    }, 30000);
 
     it('should register the base tools during initialization', async () => {
         const { createMcpServer } = await import('../src/server.js');
         const server = createMcpServer();
         // Peek into registered tools if possible or mock the registerTool method
         // This test will fail if src/server.js doesn't exist
-    });
+        await server.close();
+    }, 30000);
 });

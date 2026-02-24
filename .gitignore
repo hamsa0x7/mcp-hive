@@ -1,14 +1,20 @@
 # Dependencies
 node_modules/
 
+# Dependencies
+node_modules/
+
 # Build output
 dist/
 
 # Environment (contains API keys — never commit)
 .env
 
-# Telemetry database
+# Telemetry and Test databases
 *.db
+*.db-shm
+*.db-wal
+test_hive.db
 
 # OS files
 .DS_Store
@@ -18,9 +24,15 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Logs
+# Logs and Test outputs
 *.log
+*_output.txt
+test_output*.txt
+old_readme.md
 
 # Planning (internal dev artifacts)
 .planning/
 mcp-hive-plan.md
+
+# Local env files
+.env.local

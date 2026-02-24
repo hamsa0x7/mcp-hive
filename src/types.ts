@@ -1,7 +1,19 @@
+import { z } from 'zod';
 import { ProviderName } from './providers.js';
 import type { SwarmMetrics } from './telemetry.js';
 
-// ─── Execution Constants ─────────────────────────────────────────────────────
+//  Universal Subagent Data Contract 
+export const FindingSchema = z.object({
+    type: z.string(),
+    description: z.string(),
+    severity: z.string().nullable().optional(),
+    location: z.string().nullable().optional()
+});
+
+export const FindingsArraySchema = z.array(FindingSchema);
+export type Finding = z.infer<typeof FindingSchema>;
+
+//  Execution Constants  
 
 /** Max time (ms) for a single fetch call before AbortController fires. */
 export const PER_ATTEMPT_TIMEOUT_MS = 15_000;
@@ -12,7 +24,7 @@ export const AGENT_HARD_TIMEOUT_MS = 45_000;
 /** Max retry attempts per individual model+provider candidate. */
 export const MAX_RETRIES_PER_CANDIDATE = 2;
 
-// ─── Attempt Log ─────────────────────────────────────────────────────────────
+//  Attempt Log 
 
 export interface AttemptLog {
     model: string;
@@ -21,7 +33,7 @@ export interface AttemptLog {
     last_error: string;
 }
 
-// ─── Agent Result (Discriminated Union) ──────────────────────────────────────
+//  Agent Result (Discriminated Union) 
 
 export interface SuccessResult {
     role: string;
@@ -30,8 +42,9 @@ export interface SuccessResult {
     model: string;
     attempts: number;
     latency_ms: number;
-    findings: any[];
+    findings: Finding[];
     overall_confidence: number;
+    attempted?: AttemptLog[];
 }
 
 export interface ExhaustedResult {
@@ -40,6 +53,7 @@ export interface ExhaustedResult {
     attempted: AttemptLog[];
     retryable: true;
     latency_ms: number;
+    findings: Finding[];
 }
 
 export interface FatalErrorResult {
@@ -50,19 +64,29 @@ export interface FatalErrorResult {
     error_type: string;
     message: string;
     retryable: false;
+    attempted?: AttemptLog[];
+    findings: Finding[];
 }
 
 export type AgentResult = SuccessResult | ExhaustedResult | FatalErrorResult;
 
-// ─── Batch Response ──────────────────────────────────────────────────────────
+//  Batch Response 
 
 export interface BatchResponse {
+    swarm_id?: string;
     total_agents: number;
     successful: number;
     exhausted: number;
     fatal: number;
-    results: AgentResult[];
+    results: (SuccessResult | ExhaustedResult | FatalErrorResult)[];
     failed_roles: string[];
     metrics?: SwarmMetrics;
+    diagnostics?: Record<string, string[]>;
 }
 
+export interface SwarmSyncResponse {
+    swarm_id: string;
+    total_bees: number;
+    delegated_tasks: Finding[];
+    status: 'processing';
+}

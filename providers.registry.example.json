@@ -1,0 +1,28 @@
+{
+  "my_openai_proxy": {
+    "envKey": "MY_OPENAI_PROXY_API_KEY",
+    "baseUrl": "https://my-proxy.example.com/v1",
+    "protocol": "openai_compatible"
+  },
+  "my_anthropic_gateway": {
+    "envKey": "MY_ANTHROPIC_GATEWAY_KEY",
+    "baseUrl": "https://gateway.example.com/anthropic/v1",
+    "protocol": "anthropic_messages"
+  },
+  "my_google_gateway": {
+    "envKey": "MY_GOOGLE_GATEWAY_KEY",
+    "baseUrl": "https://gateway.example.com/google/v1beta",
+    "protocol": "google_gemini"
+  },
+  "my_azure_openai": {
+    "envKey": "MY_AZURE_OPENAI_KEY",
+    "envBaseUrlKey": "MY_AZURE_OPENAI_ENDPOINT",
+    "baseUrl": "",
+    "protocol": "azure_openai"
+  },
+  "my_cohere_proxy": {
+    "envKey": "MY_COHERE_PROXY_KEY",
+    "baseUrl": "https://gateway.example.com/cohere/v2",
+    "protocol": "cohere_chat_v2"
+  }
+}

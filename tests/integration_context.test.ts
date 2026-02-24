@@ -4,17 +4,21 @@ import * as routing from '../src/routing.js';
 import * as budget from '../src/budget.js';
 import * as executeAgentModule from '../src/execute_agent.js';
 import * as context from '../src/context.js';
+import * as health from '../src/health.js';
+import * as config from '../src/config.js';
 import { initializeDb } from '../src/db.js';
 
 describe('Context Injection Integration', () => {
     beforeEach(() => {
         vi.restoreAllMocks();
         initializeDb(':memory:');
+        vi.spyOn(config, 'validateAndConfigure').mockReturnValue(['openai', 'anthropic']);
+        vi.spyOn(health, 'verifyHiveHealth').mockResolvedValue(new Map([['openai' as any, true]]));
     });
 
     it('should pass resolved context through to executeAgent via the orchestration pipeline', async () => {
         const mockTasks = [{ filePath: 'src/auth.ts', role: 'security', prompt: 'test' }];
-        vi.spyOn(routing, 'expandRoles').mockReturnValue(mockTasks);
+        vi.spyOn(routing, 'expandSwarm').mockReturnValue(mockTasks);
         vi.spyOn(budget, 'checkBatchBudget').mockReturnValue({ allowed: true, estimatedTokens: 100 });
 
         // Mock context resolution
@@ -39,13 +43,19 @@ describe('Context Injection Integration', () => {
             'security',
             expect.any(String),
             'test',
-            expect.stringContaining('MOCK CONTEXT CONTENT')
+            expect.stringContaining('MOCK CONTEXT CONTENT'),
+            undefined,
+            undefined,
+            undefined
         );
         expect(executeAgentSpy).toHaveBeenCalledWith(
             'security',
             expect.any(String),
             'test',
-            expect.stringContaining('Analyze file: src/auth.ts')
+            expect.stringContaining('Analyze file: src/auth.ts'),
+            undefined,
+            undefined,
+            undefined
         );
     });
 });

@@ -7,7 +7,7 @@ import {
 import { AgentResult } from '../src/types.js';
 
 describe('Swarm Telemetry (computeSwarmMetrics)', () => {
-    it('should compute timing breakdown from timestamps', () => {
+    it('should compute timing breakdown from timestamps', async () => {
         const ts: SwarmTimestamps = {
             swarm_start: 1000,
             after_decomposition: 1030,
@@ -18,11 +18,11 @@ describe('Swarm Telemetry (computeSwarmMetrics)', () => {
         };
 
         const results: AgentResult[] = [
-            { role: 'security', status: 'success', provider: 'openai', model: 'gpt-4o', attempts: 1, latency_ms: 8900, findings: [], overall_confidence: 0.8 },
-            { role: 'linter', status: 'success', provider: 'groq', model: 'qwen', attempts: 2, latency_ms: 5200, findings: [], overall_confidence: 0.7 }
+            { role: 'security', status: 'success', provider: 'openai', model: 'gpt-4o', attempts: 1, latency_ms: 8900, duration_ms: 8900, findings: [], overall_confidence: 0.8 },
+            { role: 'linter', status: 'success', provider: 'groq', model: 'qwen', attempts: 2, latency_ms: 5200, duration_ms: 5200, findings: [], overall_confidence: 0.7 }
         ];
 
-        const m = computeSwarmMetrics('sw_001', ts, results);
+        const m = await computeSwarmMetrics('sw_001', ts, results);
 
         expect(m.swarm_id).toBe('sw_001');
         expect(m.decomposition_ms).toBe(30);
@@ -36,7 +36,7 @@ describe('Swarm Telemetry (computeSwarmMetrics)', () => {
         expect(m.total_retries).toBe(1); // linter had 2 attempts = 1 retry
     });
 
-    it('should compute parallel efficiency correctly', () => {
+    it('should compute parallel efficiency correctly', async () => {
         const ts: SwarmTimestamps = {
             swarm_start: 0,
             after_decomposition: 10,
@@ -47,15 +47,15 @@ describe('Swarm Telemetry (computeSwarmMetrics)', () => {
         };
 
         const results: AgentResult[] = [
-            { role: 'a', status: 'success', provider: 'openai', model: 'gpt', attempts: 1, latency_ms: 10000, findings: [], overall_confidence: 0.8 },
-            { role: 'b', status: 'success', provider: 'openai', model: 'gpt', attempts: 1, latency_ms: 5000, findings: [], overall_confidence: 0.8 }
+            { role: 'a', status: 'success', provider: 'openai', model: 'gpt', attempts: 1, latency_ms: 10000, duration_ms: 10000, findings: [], overall_confidence: 0.8 },
+            { role: 'b', status: 'success', provider: 'openai', model: 'gpt', attempts: 1, latency_ms: 5000, duration_ms: 5000, findings: [], overall_confidence: 0.8 }
         ];
 
-        const m = computeSwarmMetrics('sw_002', ts, results);
+        const m = await computeSwarmMetrics('sw_002', ts, results);
         expect(m.parallel_efficiency).toBeGreaterThan(0.99);
     });
 
-    it('should count retries and escalations from exhausted results', () => {
+    it('should count retries and escalations from exhausted results', async () => {
         const ts: SwarmTimestamps = {
             swarm_start: 0,
             after_decomposition: 5,
@@ -73,16 +73,17 @@ describe('Swarm Telemetry (computeSwarmMetrics)', () => {
                 { model: 'claude-3', provider: 'anthropic', attempts: 2, last_error: '503' }
             ],
             retryable: true,
-            latency_ms: 29000
+            latency_ms: 29000,
+            duration_ms: 29000
         }];
 
-        const m = computeSwarmMetrics('sw_003', ts, results);
+        const m = await computeSwarmMetrics('sw_003', ts, results);
         expect(m.total_retries).toBe(2);
         expect(m.provider_switches).toBe(1);
         expect(m.model_escalations).toBe(1);
     });
 
-    it('should compute sequential estimate and speedup factor', () => {
+    it('should compute sequential estimate and speedup factor', async () => {
         const ts: SwarmTimestamps = {
             swarm_start: 0,
             after_decomposition: 10,
@@ -93,27 +94,27 @@ describe('Swarm Telemetry (computeSwarmMetrics)', () => {
         };
 
         const results: AgentResult[] = [
-            { role: 'security', status: 'success', provider: 'openai', model: 'gpt', attempts: 1, latency_ms: 4000, findings: [], overall_confidence: 0.8 },
-            { role: 'linter', status: 'success', provider: 'groq', model: 'qwen', attempts: 1, latency_ms: 5000, findings: [], overall_confidence: 0.7 },
-            { role: 'arch', status: 'success', provider: 'anthropic', model: 'claude', attempts: 1, latency_ms: 3000, findings: [], overall_confidence: 0.9 },
-            { role: 'perf', status: 'success', provider: 'openai', model: 'gpt', attempts: 1, latency_ms: 4000, findings: [], overall_confidence: 0.6 },
-            { role: 'naming', status: 'success', provider: 'groq', model: 'qwen', attempts: 1, latency_ms: 2000, findings: [], overall_confidence: 0.5 }
+            { role: 'security', status: 'success', provider: 'openai', model: 'gpt', attempts: 1, latency_ms: 4000, duration_ms: 4000, findings: [], overall_confidence: 0.8 },
+            { role: 'linter', status: 'success', provider: 'groq', model: 'qwen', attempts: 1, latency_ms: 5000, duration_ms: 5000, findings: [], overall_confidence: 0.7 },
+            { role: 'arch', status: 'success', provider: 'anthropic', model: 'claude', attempts: 1, latency_ms: 3000, duration_ms: 3000, findings: [], overall_confidence: 0.9 },
+            { role: 'perf', status: 'success', provider: 'openai', model: 'gpt', attempts: 1, latency_ms: 4000, duration_ms: 4000, findings: [], overall_confidence: 0.6 },
+            { role: 'naming', status: 'success', provider: 'groq', model: 'qwen', attempts: 1, latency_ms: 2000, duration_ms: 2000, findings: [], overall_confidence: 0.5 }
         ];
 
-        const m = computeSwarmMetrics('sw_004', ts, results);
+        const m = await computeSwarmMetrics('sw_004', ts, results);
 
         // Sequential estimate = 4000 + 5000 + 3000 + 4000 + 2000 = 18000ms
         expect(m.sequential_estimate_ms).toBe(18000);
         // Wall time = 6050ms
         expect(m.total_wall_time_ms).toBe(6050);
-        // Speedup = 18000 / 6050 ≈ 2.98x
+        // Speedup = 18000 / 6050  2.98x
         expect(m.speedup_factor).toBeGreaterThan(2.5);
         expect(m.speedup_factor).toBeLessThan(3.5);
         // Time saved = 18000 - 6050 = 11950ms
         expect(m.time_saved_ms).toBe(11950);
     });
 
-    it('should include structured acceleration report', () => {
+    it('should include structured acceleration report', async () => {
         const ts: SwarmTimestamps = {
             swarm_start: 0,
             after_decomposition: 10,
@@ -124,11 +125,11 @@ describe('Swarm Telemetry (computeSwarmMetrics)', () => {
         };
 
         const results: AgentResult[] = [
-            { role: 'security', status: 'success', provider: 'openai', model: 'gpt', attempts: 1, latency_ms: 5000, findings: [], overall_confidence: 0.8 },
-            { role: 'linter', status: 'success', provider: 'groq', model: 'qwen', attempts: 1, latency_ms: 3000, findings: [], overall_confidence: 0.7 }
+            { role: 'security', status: 'success', provider: 'openai', model: 'gpt', attempts: 1, latency_ms: 5000, duration_ms: 5000, findings: [], overall_confidence: 0.8 },
+            { role: 'linter', status: 'success', provider: 'groq', model: 'qwen', attempts: 1, latency_ms: 3000, duration_ms: 3000, findings: [], overall_confidence: 0.7 }
         ];
 
-        const m = computeSwarmMetrics('sw_005', ts, results);
+        const m = await computeSwarmMetrics('sw_005', ts, results);
 
         expect(m.acceleration_report.agents).toBe(2);
         expect(m.acceleration_report.sequential_ms).toBe(8000);
@@ -139,7 +140,7 @@ describe('Swarm Telemetry (computeSwarmMetrics)', () => {
         expect(typeof m.acceleration_report.theme).toBe('string');
     });
 
-    it('should include acceleration report for single agent', () => {
+    it('should include acceleration report for single agent', async () => {
         const ts: SwarmTimestamps = {
             swarm_start: 0,
             after_decomposition: 5,
@@ -150,23 +151,16 @@ describe('Swarm Telemetry (computeSwarmMetrics)', () => {
         };
 
         const results: AgentResult[] = [
-            { role: 'security', status: 'success', provider: 'openai', model: 'gpt', attempts: 1, latency_ms: 4000, findings: [], overall_confidence: 0.8 }
+            { role: 'security', status: 'success', provider: 'openai', model: 'gpt', attempts: 1, latency_ms: 4000, duration_ms: 4000, findings: [], overall_confidence: 0.8 }
         ];
 
-        const m = computeSwarmMetrics('sw_006', ts, results);
+        const m = await computeSwarmMetrics('sw_006', ts, results);
 
         expect(m.acceleration_report.agents).toBe(1);
         expect(m.acceleration_report.sequential_ms).toBe(4000);
     });
 
-    it('STRESS: 1 agent hard-timeout (45s) + 4 fast agents (5s each) → speedup ≈ 1.4x (not inflated)', () => {
-        // Scenario:
-        //   security agent retried across all candidates, hit 45s hard timeout → exhausted
-        //   4 other agents finished in ~5s each
-        //   Sequential would be: 45 + 5 + 5 + 5 + 5 = 65s
-        //   Parallel wall time ≈ 45s (bottlenecked by the slow agent)
-        //   Speedup = 65 / 45 ≈ 1.44x — modest, honest gain
-
+    it('STRESS: 1 agent hard-timeout (45s) + 4 fast agents (5s each)  speedup  1.4x (not inflated)', async () => {
         const ts: SwarmTimestamps = {
             swarm_start: 0,
             after_decomposition: 20,
@@ -187,46 +181,28 @@ describe('Swarm Telemetry (computeSwarmMetrics)', () => {
                     { model: 'claude-3.5', provider: 'anthropic', attempts: 2, last_error: 'agent_timeout' }
                 ],
                 retryable: true,
-                latency_ms: 45000
+                latency_ms: 45000,
+                duration_ms: 45000
             },
             // Agents 2-5: fast successes
-            { role: 'linter', status: 'success', provider: 'groq', model: 'qwen', attempts: 1, latency_ms: 5000, findings: [{ type: 'naming' }], overall_confidence: 0.7 },
-            { role: 'complexity_analyzer', status: 'success', provider: 'openai', model: 'gpt-4o-mini', attempts: 1, latency_ms: 5000, findings: [], overall_confidence: 0.5 },
-            { role: 'dead_code_detector', status: 'success', provider: 'groq', model: 'qwen', attempts: 1, latency_ms: 5000, findings: [{ type: 'unused_import' }], overall_confidence: 0.6 },
-            { role: 'error_handling_auditor', status: 'success', provider: 'openai', model: 'gpt-4o', attempts: 1, latency_ms: 5000, findings: [], overall_confidence: 0.5 }
+            { role: 'linter', status: 'success', provider: 'groq', model: 'qwen', attempts: 1, latency_ms: 5000, duration_ms: 5000, findings: [{ type: 'naming', description: '' }], overall_confidence: 0.7 },
+            { role: 'complexity_analyzer', status: 'success', provider: 'openai', model: 'gpt-4o-mini', attempts: 1, latency_ms: 5000, duration_ms: 5000, findings: [], overall_confidence: 0.5 },
+            { role: 'dead_code_detector', status: 'success', provider: 'groq', model: 'qwen', attempts: 1, latency_ms: 5000, duration_ms: 5000, findings: [{ type: 'unused_import', description: '' }], overall_confidence: 0.6 },
+            { role: 'error_handling_auditor', status: 'success', provider: 'openai', model: 'gpt-4o', attempts: 1, latency_ms: 5000, duration_ms: 5000, findings: [], overall_confidence: 0.5 }
         ];
 
-        const m = computeSwarmMetrics('sw_stress_001', ts, results);
+        const m = await computeSwarmMetrics('sw_stress_001', ts, results);
 
-        // Sequential estimate = 45000 + 5000 + 5000 + 5000 + 5000 = 65000ms
         expect(m.sequential_estimate_ms).toBe(65000);
-
-        // Wall time ≈ 45100ms (bottlenecked by exhausted agent)
         expect(m.total_wall_time_ms).toBe(45100);
-
-        // Speedup = 65000 / 45100 ≈ 1.44x — NOT inflated
         expect(m.speedup_factor).toBeGreaterThan(1.3);
         expect(m.speedup_factor).toBeLessThan(1.6);
-
-        // Time saved = 65000 - 45100 = 19900ms
         expect(m.time_saved_ms).toBe(19900);
-
-        // Max agent latency = 45000 (the exhausted one)
         expect(m.max_agent_latency_ms).toBe(45000);
-
-        // Parallel efficiency: 45000 / 45100 ≈ 0.998 (almost perfect — wall time ≈ slowest agent)
         expect(m.parallel_efficiency).toBeGreaterThan(0.99);
-
-        // Retry count: 3 candidates × (2 attempts - 1 retry each) = 3 retries
         expect(m.total_retries).toBe(3);
-
-        // Provider switches: openrouter, openai, anthropic = 2 switches
         expect(m.provider_switches).toBe(2);
-
-        // Model escalations: deepseek-v3, gpt-4o, claude-3.5 = 2 escalations
         expect(m.model_escalations).toBe(2);
-
-        // Report object should reflect honest numbers
         expect(m.acceleration_report.agents).toBe(5);
         expect(m.acceleration_report.sequential_ms).toBe(65000);
         expect(m.acceleration_report.speedup).toBeGreaterThan(1.3);

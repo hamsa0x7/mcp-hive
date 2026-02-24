@@ -1,7 +1,7 @@
 import { AgentResult } from './types.js';
 import { buildAccelerationReport, AccelerationReport } from './report.js';
 
-// ─── Swarm-Level Metrics ─────────────────────────────────────────────────────
+//  Swarm-Level Metrics 
 
 export interface SwarmMetrics {
     swarm_id: string;
@@ -20,9 +20,17 @@ export interface SwarmMetrics {
     speedup_factor: number;
     time_saved_ms: number;
     acceleration_report: AccelerationReport;
+    // Phase 6: Collaborative Reasoning metrics
+    insights_posted: number;
+    subtasks_spawned: number;
+    deduplication_hits: number;
+    // Phase 9: Circuit Breaker, Queue & Health metrics
+    circuit_breakers: Record<string, { state: string, failures: number }>;
+    global_queue: { active: number, queued: number };
+    health_metrics: Record<string, { status: string, latency: number }>;
 }
 
-// ─── Timing Capture ──────────────────────────────────────────────────────────
+//  Timing Capture 
 
 export interface SwarmTimestamps {
     swarm_start: number;
@@ -61,13 +69,13 @@ function getAgentLatencies(results: AgentResult[]): number[] {
 
 /**
  * Computes swarm metrics from timestamps and agent results.
- * Returns structured data — Antigravity owns all rendering.
+ * Returns structured data  Antigravity owns all rendering.
  */
-export function computeSwarmMetrics(
+export async function computeSwarmMetrics(
     swarmId: string,
     ts: SwarmTimestamps,
     results: AgentResult[]
-): SwarmMetrics {
+): Promise<SwarmMetrics> {
     const totalWall = ts.after_aggregation - ts.swarm_start;
 
     const agentLatencies = getAgentLatencies(results);
@@ -110,7 +118,7 @@ export function computeSwarmMetrics(
         }
     }
 
-    // Build structured report payload (no rendering — data only)
+    // Build structured report payload (no rendering  data only)
     const report = buildAccelerationReport({
         agents: results.length,
         sequential_ms: sequentialEstimate,
@@ -119,6 +127,46 @@ export function computeSwarmMetrics(
         time_saved_ms: timeSaved,
         parallel_efficiency: parallelEfficiency
     });
+
+    // Query Phase 6 board for collaborative metrics
+    let insightsPosted = 0;
+    let subtasksSpawned = 0;
+    let deduplicationHits = 0;
+    try {
+        const { getDb } = await import('./db.js');
+        const db = getDb();
+        if (db) {
+            const insightRow = db.prepare('SELECT COUNT(*) as cnt FROM hive_insights WHERE swarm_id = ?').get(swarmId) as any;
+            insightsPosted = insightRow?.cnt ?? 0;
+
+            const subtaskRow = db.prepare("SELECT COUNT(*) as cnt FROM hive_board WHERE swarm_id = ? AND task_type != 'original'").get(swarmId) as any;
+            subtasksSpawned = subtaskRow?.cnt ?? 0;
+
+            const dedupRow = db.prepare("SELECT COUNT(*) as cnt FROM hive_insights WHERE swarm_id = ? AND insight_type = 'deduplication'").get(swarmId) as any;
+            deduplicationHits = dedupRow?.cnt ?? 0;
+        }
+    } catch (_e) { /* DB not available, metrics default to 0 */ }
+
+    // Query Phase 9 Circuit Breaker state
+    let cbMetrics = {};
+    try {
+        const { getBreakerMetrics } = await import('./circuit_breaker.js');
+        cbMetrics = getBreakerMetrics();
+    } catch (_e) { /* Best-effort import */ }
+
+    // Query Phase 9 Queue state
+    let queueMetrics = { active: 0, queued: 0 };
+    try {
+        const { getGlobalQueueDepth } = await import('./concurrency.js');
+        queueMetrics = getGlobalQueueDepth();
+    } catch (_e) { /* Best-effort import */ }
+
+    // Query Phase 9 Health state
+    let healthMetrics = {};
+    try {
+        const { getHealthMetrics } = await import('./health.js');
+        healthMetrics = getHealthMetrics();
+    } catch (_e) { /* Best-effort import */ }
 
     return {
         swarm_id: swarmId,
@@ -136,11 +184,17 @@ export function computeSwarmMetrics(
         sequential_estimate_ms: sequentialEstimate,
         speedup_factor: speedup,
         time_saved_ms: timeSaved,
-        acceleration_report: report
+        acceleration_report: report,
+        insights_posted: insightsPosted,
+        subtasks_spawned: subtasksSpawned,
+        deduplication_hits: deduplicationHits,
+        circuit_breakers: cbMetrics,
+        global_queue: queueMetrics,
+        health_metrics: healthMetrics
     };
 }
 
-// ─── Comparison (With vs Without Hive) ───────────────────────────────────────
+//  Comparison (With vs Without Hive) 
 
 export interface BenchmarkComparison {
     agents: number;

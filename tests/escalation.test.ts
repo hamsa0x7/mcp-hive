@@ -5,7 +5,7 @@ vi.mock('../src/db.js', () => ({
     logExecution: vi.fn()
 }));
 
-describe('Proxy callModel — AbortController & Structured Errors', () => {
+describe('Proxy callModel  AbortController & Structured Errors', () => {
     beforeEach(() => {
         vi.resetAllMocks();
         process.env.OPENAI_API_KEY = 'sk-test';
@@ -17,13 +17,13 @@ describe('Proxy callModel — AbortController & Structured Errors', () => {
             ok: true,
             status: 200,
             json: () => Promise.resolve({
-                choices: [{ message: { content: '{"status": "ok"}' } }],
+                choices: [{ message: { content: '[{"type": "task", "description": "test"}]' } }],
                 usage: { prompt_tokens: 10, completion_tokens: 20 }
             })
         });
 
         const result = await callModel('batch-1', 'sys', 'user', 'openai', 'gpt-4o');
-        expect(result).toEqual({ status: 'ok' });
+        expect(result).toEqual([{ type: "task", description: "test" }]);
     });
 
     it('should throw ModelCallError with status on HTTP error', async () => {
@@ -69,7 +69,7 @@ describe('Proxy callModel — AbortController & Structured Errors', () => {
             // expected
         }
 
-        // callModel no longer retries — that's executeAgent's job
+        // callModel no longer retries  that's executeAgent's job
         expect(fetchSpy).toHaveBeenCalledTimes(1);
     });
 });

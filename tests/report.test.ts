@@ -6,7 +6,7 @@ describe('Report (Structured Data)', () => {
         delete process.env.HIVE_REPORT_STYLE;
     });
 
-    // ─── Theme Resolution ────────────────────────────────────────────────────
+    //  Theme Resolution 
 
     it('should default to clinical when HIVE_REPORT_STYLE is unset', () => {
         expect(getReportTheme()).toBe('clinical');
@@ -22,7 +22,7 @@ describe('Report (Structured Data)', () => {
         expect(getReportTheme()).toBe('clinical');
     });
 
-    // ─── Structured Report ───────────────────────────────────────────────────
+    //  Structured Report 
 
     it('should return structured data with clinical theme', () => {
         const report = buildAccelerationReport({
@@ -55,7 +55,7 @@ describe('Report (Structured Data)', () => {
             parallel_efficiency: 0.91
         });
 
-        // Same fields — only theme changes
+        // Same fields  only theme changes
         expect(report.theme).toBe('hive');
         expect(report.agents).toBe(5);
         expect(report.sequential_ms).toBe(18000);
@@ -75,7 +75,7 @@ describe('Report (Structured Data)', () => {
             speedup: 3, time_saved_ms: 6000, parallel_efficiency: 0.95
         });
 
-        // Same keys, same values — only theme differs
+        // Same keys, same values  only theme differs
         expect(Object.keys(clinical).sort()).toEqual(Object.keys(hive).sort());
         expect(clinical.agents).toBe(hive.agents);
         expect(clinical.speedup).toBe(hive.speedup);

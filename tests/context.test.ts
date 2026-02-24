@@ -21,15 +21,15 @@ describe('Context Injection (resolveContext)', () => {
         const utilsContent = `export function utils() { return "util"; }`;
         const serviceContent = `export class Service {}`;
 
-        vi.spyOn(fs, 'readFileSync').mockImplementation((path: any) => {
+        vi.spyOn(fs.promises, 'readFile').mockImplementation(async (path: any) => {
             if (path.includes('main.ts')) return mainFileContent;
             if (path.includes('utils.js')) return utilsContent;
             if (path.includes('api.js')) return serviceContent;
             throw new Error('File not found');
         });
 
-        vi.spyOn(fs, 'existsSync').mockReturnValue(true);
-        vi.spyOn(fs, 'statSync').mockReturnValue({ isFile: () => true } as any);
+        vi.spyOn(fs.promises, 'access').mockResolvedValue(undefined);
+        vi.spyOn(fs.promises, 'stat').mockResolvedValue({ isFile: () => true } as any);
 
         const context = await resolveContext('/absolute/path/main.ts');
 
@@ -40,7 +40,8 @@ describe('Context Injection (resolveContext)', () => {
     });
 
     it('should return empty string if no local imports exist', async () => {
-        vi.spyOn(fs, 'readFileSync').mockReturnValue('console.log("hello");');
+        vi.spyOn(fs.promises, 'readFile').mockResolvedValue('console.log("hello");');
+        vi.spyOn(fs.promises, 'access').mockResolvedValue(undefined);
         const context = await resolveContext('/absolute/path/main.ts');
         expect(context).toBe('');
     });

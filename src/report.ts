@@ -1,4 +1,4 @@
-// ─── Report Style ────────────────────────────────────────────────────────────
+//  Report Style 
 
 export type ReportTheme = 'clinical' | 'hive';
 
@@ -15,11 +15,11 @@ export function getReportTheme(): ReportTheme {
         : 'clinical';
 }
 
-// ─── Structured Acceleration Report ──────────────────────────────────────────
+//  Structured Acceleration Report 
 
 /**
  * Stable, schema-safe acceleration report payload.
- * Field names never change — only `theme` tells Antigravity how to render.
+ * Field names never change  only `theme` tells Antigravity how to render.
  * Hive returns this object. Antigravity owns all display logic.
  */
 export interface AccelerationReport {
@@ -34,7 +34,7 @@ export interface AccelerationReport {
 
 /**
  * Builds the structured acceleration report.
- * Pure data — no formatting, no console output.
+ * Pure data  no formatting, no console output.
  */
 export function buildAccelerationReport(data: {
     agents: number;

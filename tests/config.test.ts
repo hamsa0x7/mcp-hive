@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { validateAndConfigure } from '../src/config.js';
+import { getProviderDefinitions } from '../src/providers.js';
 import fs from 'fs';
 import path from 'path';
 
@@ -12,6 +13,14 @@ describe('Dynamic Configuration', () => {
         if (fs.existsSync(tempEnvPath)) {
             fs.renameSync(tempEnvPath, backupEnvPath);
         }
+
+        const defs = getProviderDefinitions();
+        for (const def of Object.values(defs)) {
+            delete process.env[def.envKey];
+            if (def.envBaseUrlKey) delete process.env[def.envBaseUrlKey];
+            if (def.enabledFlagEnv) delete process.env[def.enabledFlagEnv];
+        }
+        delete process.env.MIN_PROVIDER_KEYS;
     });
 
     afterEach(() => {
@@ -24,16 +33,23 @@ describe('Dynamic Configuration', () => {
         }
     });
 
-    it('should throw error if fewer than 2 keys are provided', () => {
-        fs.writeFileSync(tempEnvPath, 'OPENAI_API_KEY=sk-test\n');
-
+    it('should throw error if fewer than required configured providers are present', () => {
+        process.env.MIN_PROVIDER_KEYS = '2';
+        process.env.OPENAI_API_KEY = 'sk-test';
         expect(() => validateAndConfigure()).toThrow(/Insufficient redundancy/);
     });
 
-    it('should pass if 2 or more keys are provided', () => {
-        fs.writeFileSync(tempEnvPath, 'OPENAI_API_KEY=sk-openai\nANTHROPIC_API_KEY=sk-ant\n');
+    it('should pass when minimum configured providers is met', () => {
+        process.env.MIN_PROVIDER_KEYS = '2';
+        process.env.OPENAI_API_KEY = 'sk-openai';
+        process.env.ANTHROPIC_API_KEY = 'sk-ant';
 
         // Should not throw
+        validateAndConfigure();
+    });
+
+    it('should pass with a single provider by default', () => {
+        process.env.OPENAI_API_KEY = 'sk-openai';
         validateAndConfigure();
     });
 });

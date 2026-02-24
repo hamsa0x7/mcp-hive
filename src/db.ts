@@ -45,6 +45,52 @@ export function initializeDb(dbPath: string = ':memory:'): void {
       timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS swarms (
+      id TEXT PRIMARY KEY,
+      status TEXT NOT NULL,
+      total_tasks INTEGER NOT NULL,
+      completed_tasks INTEGER NOT NULL,
+      delegated_tasks_json TEXT NOT NULL,
+      results_json TEXT NOT NULL,
+      created_at INTEGER NOT NULL
+    )
+  `);
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS hive_board (
+      id TEXT PRIMARY KEY,
+      swarm_id TEXT NOT NULL,
+      task_type TEXT NOT NULL,
+      context_json TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'pending',
+      assignee TEXT,
+      result_json TEXT,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      FOREIGN KEY(swarm_id) REFERENCES swarms(id)
+    )
+  `);
+
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS hive_insights (
+      id TEXT PRIMARY KEY,
+      swarm_id TEXT NOT NULL,
+      task_id TEXT,
+      insight_type TEXT NOT NULL,
+      content_json TEXT NOT NULL,
+      source_agent TEXT NOT NULL,
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY(swarm_id) REFERENCES swarms(id),
+      FOREIGN KEY(task_id) REFERENCES hive_board(id)
+    )
+  `);
+
+  // Performance indexes for frequent swarm_id lookups
+  db.exec('CREATE INDEX IF NOT EXISTS idx_board_swarm ON hive_board(swarm_id)');
+  db.exec('CREATE INDEX IF NOT EXISTS idx_insights_swarm ON hive_insights(swarm_id)');
+  db.exec('CREATE INDEX IF NOT EXISTS idx_swarms_created ON swarms(created_at)');
 }
 
 export function logExecution(batchId: string, tokens: number, findings: number, durationMs: number): void {
@@ -92,3 +138,19 @@ export function logSwarmMetrics(metrics: SwarmMetrics): void {
 export function getDb() {
   return db;
 }
+
+/**
+ * Gracefully closes the database connection.
+ * Called automatically on process exit.
+ */
+export function closeDb(): void {
+  if (db) {
+    try {
+      db.close();
+    } catch (_e) { /* already closed */ }
+    db = null;
+  }
+}
+
+// Graceful shutdown handler
+process.on('exit', closeDb);
