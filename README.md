@@ -79,13 +79,6 @@ In our production environment, the **Hive**, effective swarming follows a clear 
 4.  **Verify**:
     Restart your client and let the Queen launch a test swarm: *"`Analyze src/server.ts using hive_swarm`"*
 
----
-
-## 🛠️ Key Components
-
-- **`modelRegistry.json`**: 🧠 The "Brain" of the Drone. It maps model IDs to their architectural strengths (reasoning, api_analysis, security_detection) and multi-provider endpoints.
-- **`tests/realtime_test.ts`**: 🧪 Verification suite for streaming responses. Ensures the Drone-to-Queen communication remains stable and low-latency.
-- **`telemetry.db`**: 📊 Local operational history. Tracks swarm performance, token usage, and successful task completions.
 
 ---
 
