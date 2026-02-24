@@ -57,7 +57,7 @@ In our production environment, the **Hive**, effective swarming follows a clear 
 ## ⚡ Quick Start
 
 > [!TIP]
-> **Ask your primary Agent (The Queen) to handle the install and registration for you!** She can execute these commands directly in your workspace.
+> **Ask your Agent to handle the install and registration for you!** She can execute these commands directly in your workspace.
 
 1.  **Clone & Install**:
     ```bash
