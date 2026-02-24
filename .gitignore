@@ -1,9 +1,6 @@
 # Dependencies
 node_modules/
 
-# Dependencies
-node_modules/
-
 # Build output
 dist/
 
@@ -11,7 +8,8 @@ dist/
 .env
 
 # Telemetry and Test databases
-*.db
+!telemetry.db
+!modelRegistry.json
 *.db-shm
 *.db-wal
 test_hive.db
