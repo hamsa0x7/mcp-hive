@@ -35,6 +35,5 @@ old_readme.md
 # Planning and Examples
 .planning/
 mcp-hive-plan.md
-modelRegistry.json
 *.example.json
 *.bak

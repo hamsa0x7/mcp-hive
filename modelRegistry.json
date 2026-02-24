@@ -1,0 +1,194 @@
+{
+  "o3": {
+    "reasoning": true,
+    "strengths": [
+      "security_detection",
+      "complexity_analysis",
+      "breaking_change_detection",
+      "strategic_planning"
+    ],
+    "providers": {
+      "openai": "o3",
+      "openrouter": "openai/o3"
+    }
+  },
+  "gpt-4o": {
+    "reasoning": false,
+    "strengths": [
+      "architecture_analysis",
+      "api_analysis",
+      "quality_assurance",
+      "error_analysis"
+    ],
+    "providers": {
+      "openai": "gpt-4o",
+      "openrouter": "openai/gpt-4o",
+      "azure_openai": "gpt-4o"
+    }
+  },
+  "gpt-4.1-mini": {
+    "reasoning": false,
+    "strengths": [
+      "linting",
+      "test_analysis",
+      "dead_code_detection",
+      "error_analysis"
+    ],
+    "providers": {
+      "openai": "gpt-4.1-mini",
+      "openrouter": "openai/gpt-4.1-mini"
+    }
+  },
+  "claude-3-7-sonnet": {
+    "reasoning": true,
+    "strengths": [
+      "architecture_analysis",
+      "security_detection",
+      "test_analysis",
+      "dependency_analysis",
+      "quality_assurance"
+    ],
+    "providers": {
+      "anthropic": "claude-3-7-sonnet-latest",
+      "openrouter": "anthropic/claude-3.7-sonnet"
+    }
+  },
+  "claude-3-5-haiku": {
+    "reasoning": false,
+    "strengths": [
+      "linting",
+      "dead_code_detection",
+      "error_analysis",
+      "test_analysis"
+    ],
+    "providers": {
+      "anthropic": "claude-3-5-haiku-latest",
+      "openrouter": "anthropic/claude-3.5-haiku"
+    }
+  },
+  "gemini-2.0-pro": {
+    "reasoning": true,
+    "strengths": [
+      "architecture_analysis",
+      "performance_analysis",
+      "api_analysis",
+      "strategic_planning"
+    ],
+    "providers": {
+      "google": "gemini-2.0-pro",
+      "openrouter": "google/gemini-2.0-pro"
+    }
+  },
+  "gemini-2.0-flash": {
+    "reasoning": false,
+    "strengths": [
+      "linting",
+      "dead_code_detection",
+      "test_analysis",
+      "error_analysis"
+    ],
+    "providers": {
+      "google": "gemini-2.0-flash",
+      "openrouter": "google/gemini-2.0-flash-001"
+    }
+  },
+  "llama-3.3-70b-instruct": {
+    "reasoning": false,
+    "strengths": [
+      "performance_analysis",
+      "concurrency_analysis",
+      "api_analysis"
+    ],
+    "providers": {
+      "groq": "llama-3.3-70b-versatile",
+      "together": "meta-llama/Llama-3.3-70B-Instruct-Turbo",
+      "openrouter": "meta-llama/llama-3.3-70b-instruct"
+    }
+  },
+  "mixtral-8x22b-instruct": {
+    "reasoning": false,
+    "strengths": [
+      "linting",
+      "dependency_analysis",
+      "complexity_analysis"
+    ],
+    "providers": {
+      "mistral": "open-mixtral-8x22b",
+      "together": "mistralai/Mixtral-8x22B-Instruct-v0.1",
+      "openrouter": "mistralai/mixtral-8x22b-instruct"
+    }
+  },
+  "qwen2.5-coder-32b": {
+    "reasoning": false,
+    "strengths": [
+      "linting",
+      "api_analysis",
+      "test_analysis",
+      "dead_code_detection"
+    ],
+    "providers": {
+      "openrouter": "qwen/qwen-2.5-coder-32b-instruct",
+      "deepinfra": "Qwen/Qwen2.5-Coder-32B-Instruct",
+      "novita": "Qwen/Qwen2.5-Coder-32B-Instruct"
+    }
+  },
+  "deepseek-r1": {
+    "reasoning": true,
+    "strengths": [
+      "strategic_planning",
+      "architecture_analysis",
+      "security_detection"
+    ],
+    "providers": {
+      "openrouter": "deepseek/deepseek-r1",
+      "deepinfra": "deepseek-ai/DeepSeek-R1"
+    }
+  },
+  "command-r-plus": {
+    "reasoning": false,
+    "strengths": [
+      "quality_assurance",
+      "test_analysis",
+      "api_analysis"
+    ],
+    "providers": {
+      "cohere": "command-r-plus-08-2024",
+      "openrouter": "cohere/command-r-plus"
+    }
+  },
+  "grok-2": {
+    "reasoning": false,
+    "strengths": [
+      "architecture_analysis",
+      "performance_analysis",
+      "error_analysis"
+    ],
+    "providers": {
+      "xai": "grok-2-latest",
+      "openrouter": "x-ai/grok-2"
+    }
+  },
+  "sonar-pro": {
+    "reasoning": false,
+    "strengths": [
+      "dependency_analysis",
+      "breaking_change_detection",
+      "quality_assurance"
+    ],
+    "providers": {
+      "perplexity": "sonar-pro",
+      "openrouter": "perplexity/sonar-pro"
+    }
+  },
+  "llama-3.1-8b-ollama": {
+    "reasoning": false,
+    "strengths": [
+      "linting",
+      "error_analysis",
+      "dead_code_detection"
+    ],
+    "providers": {
+      "ollama": "llama3.1:8b"
+    }
+  }
+}
