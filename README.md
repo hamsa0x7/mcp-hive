@@ -6,19 +6,19 @@
 
 <p align="center">
   <strong>The Swarm Orchestration Layer for Complex Agentic Work.</strong><br/>
-  Queen (The Agent) • Drone (MCP Hive) • Worker Bees (Subagents)
+  👑 Queen (The Agent) • 🎬 Drone (MCP Hive) • 🐝 Worker Bees (Subagents)
 </p>
 
 <p align="center">
-  <a href="#the-problem-the-capability-gap">The Problem</a> •
-  <a href="#the-solution-mcp-hive">The Solution</a> •
-  <a href="#the-hierarchy-of-the-hive">The Hierarchy</a> •
-  <a href="#quick-start">Quick Start</a>
+  <a href="#the-problem-the-capability-gap">🔍 The Problem</a> •
+  <a href="#the-solution-mcp-hive">🎯 The Solution</a> •
+  <a href="#the-hierarchy-of-the-hive">🧬 The Hierarchy</a> •
+  <a href="#quick-start">⚡ Quick Start</a>
 </p>
 
 ---
 
-##  The Problem: The Capability Gap
+## 🔍 The Problem: The Capability Gap
 
 Many agentic environments (like AntiGravity) are single-threaded by nature. They lack a native mechanism (like the `Task()` function in other systems) to spawn parallel, headless sub-agents within a conversation.
 
@@ -26,7 +26,7 @@ When an agent hits this **Environmental Dead End**, it often reverts to "Covert 
 
 I particularly faced this bottleneck while building complex systems in **AntiGravity**, and many other agentic IDEs suffer from the same limitation. **MCP Hive** was developed specifically to solve this for AntiGravity but is designed to be compatible with most agentic platforms.
 
-##  The Solution: MCP Hive
+## 🎯 The Solution: MCP Hive
 
 **MCP Hive is the direct architectural solution to this problem.**
 
@@ -44,7 +44,7 @@ Antigravity itself is a single-threaded environment. MCP Hive handles the "Swarm
 
 ---
 
-##  The Hierarchy of the Hive
+## 🧬 The Hierarchy of the Hive
 
 In our production environment, the **Hive**, effective swarming follows a clear chain of command:
 
@@ -54,7 +54,7 @@ In our production environment, the **Hive**, effective swarming follows a clear 
 
 ---
 
-##  Quick Start
+## ⚡ Quick Start
 
 > [!TIP]
 > **Ask your primary Agent (The Queen) to handle the install and registration for you!** She can execute these commands directly in your workspace.
@@ -81,7 +81,7 @@ In our production environment, the **Hive**, effective swarming follows a clear 
 
 ---
 
-##  Governance & Security
+## ⚖️ Governance & Security
 
 - **Concurrency**: 50 active outbound requests (process-wide) with a 5-request cap per provider per swarm.
 - **Scale**: Up to 15 parallel Worker Bees per batch.
