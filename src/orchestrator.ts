@@ -77,7 +77,7 @@ export async function orchestrate(
                 latency_ms: 0,
                 overall_confidence: 1.0,
                 findings: [{
-                    type: 'orchestrator_intervention',
+                    type: 'queen_delegation',
                     description: `Security Sandbox blocked file access: ${secCheck.reason}`,
                     severity: 'critical',
                     location: chunk.path
@@ -167,7 +167,7 @@ export async function orchestrate(
             message: result.error.message || 'Unhandled execution failure',
             retryable: false,
             findings: [{
-                type: 'orchestrator_intervention',
+                type: 'queen_delegation',
                 description: `Worker bee crashed at runtime: ${result.error.message}`,
                 severity: 'critical',
                 location: failedTask.filePath
@@ -227,7 +227,7 @@ export async function orchestrateSwarm(
                 message: secCheck.reason || 'Invalid path',
                 retryable: false,
                 findings: [{
-                    type: 'orchestrator_intervention',
+                    type: 'queen_delegation',
                     description: `Security Sandbox blocked file access: ${secCheck.reason}`,
                     severity: 'critical',
                     location: st.path
@@ -253,12 +253,12 @@ export async function orchestrateSwarm(
         }
     }
 
-    // 3. Hive Assignment (Slots 1-15: Workers, 16+: Overload)
+    // 3. Hive Assignment (Slots 1-15: Bees, 16+: Queen)
     const beeTasks = microTasks.slice(0, MAX_AGENTS_PER_BATCH);
-    const overloadTasks = microTasks.slice(MAX_AGENTS_PER_BATCH);
+    const queenTasks = microTasks.slice(MAX_AGENTS_PER_BATCH);
 
     // 4. Initial Persistence
-    SwarmStore.create(batchId, beeTasks.length, overloadTasks);
+    SwarmStore.create(batchId, beeTasks.length, queenTasks);
 
     // 5. Parallel Background Launch (Non-blocking)
     const expandedBees = expandSwarm(beeTasks.map(b => ({
@@ -345,7 +345,7 @@ export async function orchestrateSwarm(
                         filePath: task.filePath,
                         status: 'fatal_error',
                         findings: [{
-                            type: 'orchestrator_intervention',
+                            type: 'queen_delegation',
                             description: `Background worker failed: ${err.message}`,
                             severity: 'critical',
                             location: null
@@ -358,7 +358,7 @@ export async function orchestrateSwarm(
                     filePath: task.filePath,
                     status: 'fatal_error',
                     findings: [{
-                        type: 'orchestrator_intervention',
+                        type: 'queen_delegation',
                         description: `Background worker setup failed: ${syncErr.message}`,
                         severity: 'critical',
                         location: null
@@ -371,18 +371,18 @@ export async function orchestrateSwarm(
     });
 
     // 6. Instant Spillover Return (Fast Path)
-    // Package overload tasks as intervention findings immediately
-    const delegatedResults = overloadTasks.map(qt => ({
+    // Package queen tasks as delegation findings immediately
+    const delegatedResults = queenTasks.map(qt => ({
         role: qt.role,
         status: 'fatal_error' as const,
         provider: 'none',
         model: 'none',
-        error_type: 'orchestrator_intervention',
-        message: `Capacity exhausted. Primary Orchestrator intervention required for chunk ${qt.index + 1} of ${qt.path}.`,
+        error_type: 'queen_delegation',
+        message: `Capacity exhausted. Queen intervention required for chunk ${qt.index + 1} of ${qt.path}.`,
         retryable: false as const,
         findings: [{
-            type: 'orchestrator_intervention',
-            description: `Agent limit hit. Orchestrator must process ${qt.path} lines ${qt.chunk.startLine}-${qt.chunk.endLine}.`,
+            type: 'queen_delegation',
+            description: `Micro-Bee limit hit. Queen must process ${qt.path} lines ${qt.chunk.startLine}-${qt.chunk.endLine}.`,
             severity: 'medium',
             location: `${qt.path}:${qt.chunk.startLine}`
         }]

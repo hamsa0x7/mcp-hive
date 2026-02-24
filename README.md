@@ -5,15 +5,15 @@
 <h1 align="center"> MCP Hive</h1>
 
 <p align="center">
-  <strong>The Orchestration Layer for Complex Agentic Work.</strong><br/>
+  <strong>The Swarm Orchestration Layer for Complex Agentic Work.</strong><br/>
   One request. Multiple specialists. Merged intelligence.
 </p>
 
 <p align="center">
   <a href="#the-story-breaking-the-hallucination-loop">The Story</a> •
   <a href="#quick-start">Quick Start</a> •
-  <a href="#configuration">Configuration</a> •
-  <a href="#operational-governance">Governance</a>
+  <a href="#the-royal-governance">Governance</a> •
+  <a href="#configuration">Configuration</a>
 </p>
 
 ---
@@ -22,24 +22,24 @@
 
 If you’ve spent enough time working with LLM-based coding agents, you’ve eventually hit "The Wall." You ask for a complex multi-file audit or a major refactor, and the agent—constrained by its single-threaded nature—reaches its limit. It can't spawn sub-processes. It can't "think" in parallel.
 
-This is where the **Hallucination Loop** begins. To satisfy your workflow, the agent starts "simulating" research. It tells you it "verified the security logs" or "checked the dependencies," when in reality, it just sat in the same context window, making its best guess.
+This is where the **Hallucination Loop** begins. To satisfy your workflow, the agent starts "simulating" research. It tells you it "verified the security logs" or "checked the dependencies," when in reality, it just sat in the same context window, making its best guess because it had no other way to satisfy the requirement.
 
-**MCP Hive** was built to solve this environmental dead end. It gives your primary agent the ability to delegate real work to a swarm of specialists, ensuring that **environmental reality finally matches the workflow's demands.**
+**MCP Hive** was built to solve this environmental dead end. It introduces the **Queen**—a high-force orchestration layer that can delegate real work to a swarm of parallel **Worker Bees**. By exposing these tools to your environment, it ensures that **environmental reality finally matches the workflow's demands.**
 
 ##  The Solution: High-Force Delegation
 
-Instead of a solo agent guessing, Hive turns it into a **Swarm Commander**. It provides a production-grade master command suite:
+Instead of a solo agent guessing, Hive turns it into a **Swarm Commander**. The Queen handles the logistics, the keys, and the parallelization, while the primary agent remains the master of the conversation.
 
-- **`hive_swarm`**: Launch an asynchronous polymorphic swarm. Assign different specialists (Security, Perf, Logic) to different files simultaneously.
-- **`hive_harvest`**: Collect the merged findings once the swarm finishes its work.
-- **`hive_post_insight`**: Allows "Bees" to share discoveries (like duplicated patterns) in real-time on a shared board.
-- **`hive_spawn_subtask`**: Lets an agent realize it needs a *new* specialist role mid-analysis and spawn one automatically.
+- **`hive_swarm`**: Launch an asynchronous polymorphic swarm. The Queen handles the decomposition—assigning specific specialists (Security, Perf, Logic) to different file chunks simultaneously.
+- **`hive_harvest`**: Collect the merged findings once the swarm finishes. No more bloated context windows; just surgical results.
+- **`hive_post_insight`**: Allows Worker Bees to share cross-file discoveries (like duplicated patterns) in real-time.
+- **`hive_spawn_subtask`**: Enables the swarm to be recursive. If a Bee finds an unexpected SQL vulnerability, it can request a dedicated SQL specialist mid-flight.
 
-##  Why Parallelism Matters
+##  The Difference: Parallel Focus
 
-It's not just about speed (though it is significantly faster); it’s about **Cognitive Focus**. 
+Traditional agents lose focus when they try to audit 10 files at once. Their reasoning starts to fray as the context window fills up with noise. 
 
-When a solo agent tries to analyze 10 files, it loses depth. Its context window gets bloated, and its reasoning starts to fray. Hive "fractures" the problem. It allows a dedicated specialist to dive deep into a single module with 100% focus, returning a surgical report that the primary agent can then merge into a master plan.
+The Queen "fractures" the problem. She allows a dedicated specialist to dive deep into a single module with 100% focus, returning a surgical report that is merged back into the Hive's collective intelligence. It's not just about being faster; it's about being **deeper**.
 
 ---
 
@@ -67,27 +67,26 @@ When a solo agent tries to analyze 10 files, it loses depth. Its context window 
 
 ---
 
+##  Royal Governance
+
+- **Concurrency Control**: 50 active outbound requests (process-wide) with a 5-request cap per provider per swarm.
+- **Scale**: Up to 15 parallel specialists per batch.
+- **Redundancy**: Integrated Circuit Breakers and 3-tier provider failover.
+- **Security**: Strict path sandboxing with Symlink Escape protection (managed by the Queen).
+
+---
+
 ##  Hardened Configuration
 
-Hive is built for production environments. It trusts your global MCP configuration for all secrets and limits.
+Hive is built for production. It trusts your global MCP configuration for all secrets and limits.
 
 | Variable | Requirement | Description |
 |---|---|---|
 | `*_API_KEY` | Required | Keys for the providers you want active in the swarm. |
-| `HIVE_ALLOWLIST_ROOT` | Manual/Auto | Fixed path limit. Hive will never read/write outside this folder. |
+| `HIVE_ALLOWLIST_ROOT` | Manual/Auto | Fixed path limit. The Queen will never read/write outside this folder. |
 | `MIN_PROVIDER_KEYS` | Optional | Defaults to `1`. Minimum healthy providers required for a swarm. |
-| `RECOMMENDED_PROVIDER_KEYS`| Optional | Defaults to `2`. Resilience target; Hive warns if you're under-provisioned. |
 | `OLLAMA_ENABLED` | Optional | Set to `true` to enable local-inference fallbacks. |
 | `HIVE_REPORT_STYLE` | Optional | `clinical` (strict) or `hive` (bee-themed). |
-
----
-
-##  Operational Governance
-
-- **Concurrency Control**: 50 active outbound requests (process-wide) with a 5-request cap per provider per swarm.
-- **Scale**: Up to 15 parallel specialists per batch.
-- **Resilience**: Integrated Circuit Breakers and 3-tier provider failover.
-- **Security**: Strict path sandboxing with Symlink Escape protection.
 
 ---
 
