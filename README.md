@@ -81,6 +81,14 @@ In our production environment, the **Hive**, effective swarming follows a clear 
 
 ---
 
+## 🛠️ Key Components
+
+- **`modelRegistry.json`**: 🧠 The "Brain" of the Drone. It maps model IDs to their architectural strengths (reasoning, api_analysis, security_detection) and multi-provider endpoints.
+- **`realtime_test.ts`**: 🧪 Verification suite for streaming responses. Ensures the Drone-to-Queen communication remains stable and low-latency.
+- **`telemetry.db`**: 📊 Local operational history. Tracks swarm performance, token usage, and successful task completions.
+
+---
+
 ## ⚖️ Governance & Security
 
 - **Concurrency**: 50 active outbound requests (process-wide) with a 5-request cap per provider per swarm.
