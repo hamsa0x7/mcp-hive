@@ -1,9 +1,9 @@
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import * as fs from 'fs';
-import { initializeDb, closeDb } from './src/db.js';
-import { validateAndConfigure } from './src/config.js';
-import { orchestrateSwarm, harvestSwarm } from './src/orchestrator.js';
+import { initializeDb, closeDb } from '../src/db.js';
+import { validateAndConfigure } from '../src/config.js';
+import { orchestrateSwarm, harvestSwarm } from '../src/orchestrator.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,7 +25,7 @@ async function runRealtimeTest() {
         initializeDb(dbPath);
         console.log(`[DB] Initialize SQLite shared board at ${dbPath}`);
 
-        const packageJsonPath = path.resolve(__dirname, 'package.json');
+        const packageJsonPath = path.resolve(__dirname, '../package.json');
 
         const tasks = [
             { path: packageJsonPath, role: 'security_auditor', customPrompt: 'Analyze this package.json for any outdated dependencies or known vulnerabilities. You must return valid JSON matching the exact expected format.' },
