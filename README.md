@@ -5,59 +5,41 @@
 <h1 align="center"> MCP Hive</h1>
 
 <p align="center">
-  <strong>The Swarm Orchestration Layer for Agentic Environments.</strong><br/>
+  <strong>The Orchestration Layer for Complex Agentic Work.</strong><br/>
   One request. Multiple specialists. Merged intelligence.
 </p>
 
 <p align="center">
-  <a href="#quick-start">Quick Start</a> 
-  <a href="#swarm-commander">Swarm Commander</a> 
-  <a href="#software-defined-parallelism">Software-Defined Parallelism</a> 
-  <a href="#configuration">Configuration</a>
+  <a href="#the-story-breaking-the-hallucination-loop">The Story</a> •
+  <a href="#quick-start">Quick Start</a> •
+  <a href="#configuration">Configuration</a> •
+  <a href="#operational-governance">Governance</a>
 </p>
 
 ---
 
-##  The Problem: The Capability Gap
+##  The Story: Breaking the Hallucination Loop
 
-Many agentic environments (like AntiGravity) are single-threaded by nature. They lack a native mechanism (like the `Task()` function in other systems) to spawn parallel, headless sub-agents within a conversation.
+If you’ve spent enough time working with LLM-based coding agents, you’ve eventually hit "The Wall." You ask for a complex multi-file audit or a major refactor, and the agent—constrained by its single-threaded nature—reaches its limit. It can't spawn sub-processes. It can't "think" in parallel.
 
-When an agent hits this **Environmental Dead End**, it often reverts to "Covert Recovery"—simulating research or lying about tool availability to satisfy a workflow. This creates a "hallucination loop" that compromises project integrity.
+This is where the **Hallucination Loop** begins. To satisfy your workflow, the agent starts "simulating" research. It tells you it "verified the security logs" or "checked the dependencies," when in reality, it just sat in the same context window, making its best guess.
 
-##  The Solution: MCP Hive
+**MCP Hive** was built to solve this environmental dead end. It gives your primary agent the ability to delegate real work to a swarm of specialists, ensuring that **environmental reality finally matches the workflow's demands.**
 
-**MCP Hive is the direct architectural solution to this problem.**
+##  The Solution: High-Force Delegation
 
-It provides a legitimate, high-force pathway for agentic work by acting as an external **Orchestration Layer**. By exposing real tools to the environment, it ensures that **environmental reality finally matches the workflow's demands.**
+Instead of a solo agent guessing, Hive turns it into a **Swarm Commander**. It provides a production-grade master command suite:
 
-###  Legitimate Tooling
-Instead of hallucinating functions, Hive exposes a production-grade master command suite:
-- `hive_swarm`: Launch an asynchronous polymorphic swarm batch (`path`, optional `role`, optional `custom_prompt`, optional `requested_strength`, optional `workspace_root`).
-- `hive_harvest`: Collect results for a previously launched swarm by `swarm_id`.
-- `hive_post_insight`: Post cross-bee discoveries/blockers to the shared board.
-- `hive_spawn_subtask`: Spawn specialized follow-up work from an in-flight swarm task.
+- **`hive_swarm`**: Launch an asynchronous polymorphic swarm. Assign different specialists (Security, Perf, Logic) to different files simultaneously.
+- **`hive_harvest`**: Collect the merged findings once the swarm finishes its work.
+- **`hive_post_insight`**: Allows "Bees" to share discoveries (like duplicated patterns) in real-time on a shared board.
+- **`hive_spawn_subtask`**: Lets an agent realize it needs a *new* specialist role mid-analysis and spawn one automatically.
 
-###  Swarm Commander
-Antigravity itself is a single-threaded environment. MCP Hive handles the "Swarm" logic outside of your main context. It uses your API keys to spawn "worker agents" via raw LLM calls, gathers their findings, and returns a single, structured response. It turns a "solo agent" into a **Swarm Commander**.
+##  Why Parallelism Matters
 
----
+It's not just about speed (though it is significantly faster); it’s about **Cognitive Focus**. 
 
-##  Software-Defined Parallelism
-
-Traditional agents do research sequentially. Hive does it in a swarm.
-
-```
-1 request  Hive  5 bees in parallel  merged findings
-                     Discovery
-                     Context Mapping
-                     Tactical Planning
-                     Verification
-                     Security
-```
-
-> Sequential: **18s**  Hive: **6s**  **~3x faster**
-
-Compatible with any MCP client. Optimized for **AntiGravity**.
+When a solo agent tries to analyze 10 files, it loses depth. Its context window gets bloated, and its reasoning starts to fray. Hive "fractures" the problem. It allows a dedicated specialist to dive deep into a single module with 100% focus, returning a surgical report that the primary agent can then merge into a master plan.
 
 ---
 
@@ -71,46 +53,41 @@ Compatible with any MCP client. Optimized for **AntiGravity**.
     npm run build
     ```
 
-2.  **Register (installer-managed paths)**:
+2.  **Register**:
     ```bash
     npm run register
     ```
-    This auto-writes `command`, `args`, `cwd`, and `HIVE_ALLOWLIST_ROOT` in your global `mcp_config.json`.
-    If you prefer, ask your agent to run the install/register step for you.
+    This auto-writes your paths (`command`, `cwd`, and `HIVE_ALLOWLIST_ROOT`) to your global `mcp_config.json`.
 
-3.  **Add keys only**:
-    Update only the `*_API_KEY` values under `mcpServers.hive.env` (placeholders are created for you).
+3.  **Add Keys**:
+    Open your `mcp_config.json` and replace the API key placeholders (e.g., `<OPENAI_API_KEY>`) with your real credentials.
 
 4.  **Verify**:
-    Restart your MCP client. Launch a test swarm directly from the chat:
-    *"`Analyze src/health.ts using hive_swarm`"*
+    Restart your MCP client and ask: *"`Analyze src/server.ts using hive_swarm`"*
 
 ---
 
 ##  Hardened Configuration
 
-The Hive uses a "No-Local-Env" priority system for production registry sync. It trusts your global MCP configuration for all secrets and limits.
+Hive is built for production environments. It trusts your global MCP configuration for all secrets and limits.
 
 | Variable | Requirement | Description |
 |---|---|---|
-| `*_API_KEY` | Required | Input keys for providers you want active. Users should only edit these. |
-| `HIVE_ALLOWLIST_ROOT` | Installer-managed | Defaults to `cwd` at registration. If missing at runtime, Hive falls back to process `cwd`. |
-| `MIN_PROVIDER_KEYS` | Optional | Defaults to `1`. Number of healthy providers required to launch. |
-| `RECOMMENDED_PROVIDER_KEYS` | Optional | Defaults to `2`. Soft resilience target; Hive warns if below this. |
+| `*_API_KEY` | Required | Keys for the providers you want active in the swarm. |
+| `HIVE_ALLOWLIST_ROOT` | Manual/Auto | Fixed path limit. Hive will never read/write outside this folder. |
+| `MIN_PROVIDER_KEYS` | Optional | Defaults to `1`. Minimum healthy providers required for a swarm. |
+| `RECOMMENDED_PROVIDER_KEYS`| Optional | Defaults to `2`. Resilience target; Hive warns if you're under-provisioned. |
 | `OLLAMA_ENABLED` | Optional | Set to `true` to enable local-inference fallbacks. |
 | `HIVE_REPORT_STYLE` | Optional | `clinical` (strict) or `hive` (bee-themed). |
-| `DB_PATH` | Optional | Path to the persistent SQLite registry for long-running swarms. |
-
-For future multi-project sessions, the Queen can pass a per-request `workspace_root` to `hive_swarm` so users do not manually edit path settings.
 
 ---
 
 ##  Operational Governance
 
-- **Global Concurrency Cap**: 50 active outbound requests (process-wide).
-- **Swarm Concurrency Cap**: 5 active requests per provider (per batch).
-- **Max Agents**: 15 specialists per swarm.
-- **Failover**: Automatic 3-tier escalation and Circuit Breaker protection.
+- **Concurrency Control**: 50 active outbound requests (process-wide) with a 5-request cap per provider per swarm.
+- **Scale**: Up to 15 parallel specialists per batch.
+- **Resilience**: Integrated Circuit Breakers and 3-tier provider failover.
+- **Security**: Strict path sandboxing with Symlink Escape protection.
 
 ---
 

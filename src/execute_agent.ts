@@ -47,8 +47,8 @@ export async function executeAgent(
             message: err.message ?? `Failed to resolve candidates for strength: ${effectiveStrength}`,
             retryable: false,
             findings: [{
-                type: "queen_delegation",
-                description: `No worker bees available for role: ${role} (strength: ${effectiveStrength}). Queen intervention required.`,
+                type: "orchestrator_intervention",
+                description: `No worker bees available for role: ${role} (strength: ${effectiveStrength}). Orchestrator intervention required.`,
                 severity: "critical",
                 location: null
             }]
@@ -105,8 +105,8 @@ export async function executeAgent(
                     retryable: true,
                     latency_ms: Date.now() - startTime,
                     findings: [{
-                        type: "queen_delegation",
-                        description: `Worker bee exhausted retries (Timeout). Queen intervention required.`,
+                        type: "orchestrator_intervention",
+                        description: `Worker bee exhausted retries (Timeout). Orchestrator intervention required.`,
                         severity: "critical",
                         location: null
                     }]
@@ -168,8 +168,8 @@ export async function executeAgent(
                         retryable: false,
                         attempted,
                         findings: [{
-                            type: "queen_delegation",
-                            description: `Worker bee failed (${classifyError(err)}). Queen intervention required.`,
+                            type: "orchestrator_intervention",
+                            description: `Worker bee failed (${classifyError(err)}). Orchestrator intervention required.`,
                             severity: "critical",
                             location: null
                         }]
@@ -206,8 +206,8 @@ export async function executeAgent(
         retryable: true,
         latency_ms: Date.now() - startTime,
         findings: [{
-            type: "queen_delegation",
-            description: `Worker bee exhausted all providers. Queen intervention required.`,
+            type: "orchestrator_intervention",
+            description: `Worker bee exhausted all providers. Orchestrator intervention required.`,
             severity: "critical",
             location: null
         }]

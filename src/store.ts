@@ -13,7 +13,7 @@ export interface SwarmState {
     results: SwarmResult[];
     total_tasks: number;
     completed_tasks: number;
-    delegated_tasks: any[]; // Queen-delegated tasks
+    delegated_tasks: any[]; // Orchestrator-intervention tasks
     createdAt: number;
 }
 

@@ -48,7 +48,7 @@ export function setupHandlers(server: McpServer) {
                 custom_prompt: z.string().optional().describe('Optional: The highly specific, dynamic system prompt for the agent.'),
                 requested_strength: z.string().optional().describe('Optional: Explicit model capability to route against (e.g., "security_detection").')
             })).max(15).describe('List of file-role pairs for the swarm'),
-            workspace_root: z.string().optional().describe('Optional: Per-request workspace root for path sandboxing (Queen-managed).')
+            workspace_root: z.string().optional().describe('Optional: Per-request workspace root for path sandboxing (Orchestrator-managed).')
         },
         async ({ tasks, workspace_root }) => {
             try {
@@ -80,7 +80,7 @@ export function setupHandlers(server: McpServer) {
                         message: error.message,
                         retryable: false as const,
                         findings: [{
-                            type: 'queen_delegation',
+                            type: 'orchestrator_intervention',
                             description: `MCP pre-flight failed (${error.message}).`,
                             severity: 'critical',
                             location: null
